@@ -1,0 +1,13 @@
+{
+  "name": "workout_logger",
+  "version": "1.0.0",
+  "description": "An app to log your workouts and plan the workouts in advance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Parwinder Singh",
+  "license": "ISC",
+  "type": "module"
+}
