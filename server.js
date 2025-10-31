@@ -1,26 +1,40 @@
-const mongoose =require("mongoose");   //
-const dotenv = require("dotenv");
-const app = require("./src/app.js");
-const authUserRouters =require("./src/routes/authUsersRoutes.js");
+/**
+ * @file server file
+ * @desc starts the server and mongodb and handles all the routes 
+ * @module server
+ * @requires express
+ * @requires mongoose
+ * @requires dotenv
+ * @requires ./src/routes/authUsersRoutes.js
+ */
 
-//it is preparing the .env file process to be used in the file
+//importing the required modules and routes
+const express= require("express");
+const mongoose =require("mongoose");   
+const dotenv = require("dotenv");
+const authUserRoutes =require("./src/routes/authUsersRoutes.js");
+
+//initialize the enviroment variables
 dotenv.config();
 
-//Registering routes before starting the server
+//initiliaze the Express Application
+const app = express();
 
-//Route for the User Authentication during Singup/Login
-app.use('/api/auth',authUserRouters);
+// Middleware to parse incoming JSON data
+app.use(express.json());
 
+//Register Routes
+app.use('/api/auth',authUserRoutes);
 
-//Connect to MongoDb
+//Connecting to MongoDb and start the server
 mongoose.connect(process.env.MONGO_URI)
    .then(()=>{
     console.log("MongoDB Connected");
     app.listen(process.env.PORT,()=>{
-        console.log(`server running on PORT ${process.env.PORT}`);
+        console.log(`server running on PORT ${process.env.PORT || 3000}`);
     });
 
    })
-   .catch(err=>("MongoDb connection Error:",err));
+   .catch((err)=>console.log("MongoDb connection Error:",err));
 
 
