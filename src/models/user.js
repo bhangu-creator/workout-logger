@@ -13,23 +13,25 @@ const mongoose = require("mongoose");
 const userSchema =new mongoose.Schema({
     name:{
         type:String,
-        required:[true,"name is required"], //validation message
-        trim : true //removes space from start/end
+        required:[true,"name is required"], 
+        trim : true,
     },
     email:{
         type:String,
         required:true,
-        unique:true, //no duplicates email
-        lowercase:true //normalize email
+        unique:true, 
+        lowercase:true,
     },
     password:{
         type:String,
         required:[true,"password is required"],
-        minlength: 8
+        minlength: 8,
     },
+    resetPasswordToken: String,
+    resetPasswordExpires : Date,
     createdAt:{
         type:Date,
-        default:Date.now  //automatically stores timestamp
+        default:Date.now, 
     }
 });
 

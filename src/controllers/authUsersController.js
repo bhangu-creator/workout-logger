@@ -6,12 +6,13 @@
  * @requires bcrypt
  * @requires jwt
  * @requires nodemailer
- * @methods signup,login
+ * @methods signup,login,forgotPassword,resetPassword
 */
 
 //Importing required modules and models
 const User =require('../models/user.js');
 const bcrypt= require("bcryptjs");
+const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,15}$/;
@@ -141,15 +142,19 @@ const forgotPassword = async (req,res)=>{
         const user= await User.findOne({email});
         if (!user)
         {
-            return res.status(400).json({message:"User not found"});
+            return res.status(200).json({message:"if that email exists, a reset link has been sent!"});
         }
 
-        // Create a reset token (expires in 15 minutes)
-        const resetToken = jwt.sign(
-        { id: user._id },
-        process.env.JWT_SECRET,
-        { expiresIn: "15m" }
-        );
+        // Creates a random token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        
+        //hashed the token before storing it in db
+        const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+        //store the Hashed token in the database
+        user.resetPasswordToken=hashedToken;
+        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+        await user.save();
 
         //create a small transporter
         const transporter=nodemailer.createTransport({
@@ -183,5 +188,63 @@ const forgotPassword = async (req,res)=>{
     
 }};
 
+const resetPassword = async (req,res)=>
+{
+    try{
+        //get token from url params and new password from body
+        const {token} = req.params;
+        const {newPassword}= req.body;
+
+        //validate inputs
+        if(!token){
+            return res.status(400).json({message:"Reset token is required"});
+        }
+
+        if (!newPassword) {
+            return res.status(400).json({ message: "New password is required" });
+        }
+        
+        //validating password length
+        if (!passwordRegex.test(newPassword))
+        {
+            return res.status(400).json({error:"Password must have at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and be 8+ characters long."});
+        }
+
+        //hash the token to search in db
+        const hashedToken = crypto
+            .createHash('sha256')
+            .update(token)
+            .digest('hex');
+        
+        //find user with matching hashed token and not expired
+        const user= await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if(!user){
+            return res.status(400).json({message:"Invalid or expired token"});
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update user's password and clear reset token fields
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined; 
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ 
+            message: "Password reset successful! You can now login."});
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ 
+            message: "Error resetting password", 
+            error: error.message 
+        });
+        }
+};
+
 //export the modules
-module.exports={signup,login,forgotPassword};
+module.exports={signup,login,forgotPassword,resetPassword};
