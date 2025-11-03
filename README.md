@@ -1,22 +1,27 @@
-# 🏋️ Workout Logger (Node.js)
+# 🧍‍♂️ Auth Users API (Node.js + MongoDB)
 
-A simple and efficient **Workout Logger** built with **Node.js** and **JavaScript**, designed to help users track workouts, sets, reps, and progress.
+A clean and modular **Authentication API** built with **Node.js**, **Express**, and **MongoDB** — developed from scratch to handle user signup and login securely.  
+This project demonstrates my backend development skills, including route handling, middleware setup, and MongoDB integration.
 
 ---
 
 ## 🚀 Features
-- 🏃 Log workouts with sets, reps, and weight
-- 📅 View workout history
-- 📈 Track performance trends
-- 💾 Save data to local JSON or database
-- ⚙️ Modular and extendable architecture
+- 🔐 User Signup with hashed passwords (using bcrypt)
+- 🔑 User Login with validation
+- 🧩 Modular folder structure (routes, controllers, models)
+- 🌍 MongoDB connection with environment variables
+- ⚙️ Express middleware for JSON parsing
+- 📦 Organized, production-ready setup
 
 ---
 
 ## 🧠 Tech Stack
-- **Runtime:** Node.js
-- **Language:** JavaScript (ES6+)
-- **Libraries:** (to be added — e.g. Express, FS, etc.)
+- **Runtime:** Node.js  
+- **Framework:** Express.js  
+- **Database:** MongoDB (Mongoose ODM)  
+- **Language:** JavaScript (ES6+ syntax, CommonJS modules)
+- **Environment Management:** dotenv  
+- **Security:** bcrypt for password hashing  
 
 ---
 
@@ -24,5 +29,8 @@ A simple and efficient **Workout Logger** built with **Node.js** and **JavaScrip
 
 1. **Clone this repo**
    ```bash
-   git clone https://github.com/bhangu-creator/workout-logger.git
-   cd workout-logger
+   git clone https://github.com/bhangu-creator/auth-users-api.git
+
+
+
+

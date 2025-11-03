@@ -9,7 +9,7 @@
 
 //importing the required modules and controller functions
 const express = require('express');
-const { signup } =require('../controllers/authUsersController.js');
+const { signup ,login ,forgotPassword} =require('../controllers/authUsersController.js');
 
 //Creates an express router object
 const router=express.Router()
@@ -17,6 +17,14 @@ const router=express.Router()
 // @route POST /api/auth/signup
 // @desc  Register a new user
 router.post("/signup",signup);
+
+// @route POST /api/auth/login
+// @desc  Login the user
+router.post("/login",login)
+
+// @route POST /api/auth/forgotpassword
+// @desc   to be used for requesting to reset the forgot password 
+router.post("/forgotpassword",forgotPassword)
 
 //export the router to be used in other files
 module.exports=router;

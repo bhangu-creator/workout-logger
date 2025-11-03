@@ -4,12 +4,19 @@
  * @module controllers/authUsersController
  * @requires ../models/user.js
  * @requires bcrypt
- * @methods signup
+ * @requires jwt
+ * @requires nodemailer
+ * @methods signup,login
 */
 
 //Importing required modules and models
 const User =require('../models/user.js');
 const bcrypt= require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,15}$/;
+const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
 
 /**
  * @desc   Registers a new user.
@@ -28,6 +35,12 @@ const signup= async (req,res)=>
         const existingUser=await User.findOne({email});
         if (existingUser){
             return res.status(400).json({message:"User already exists"});
+        }
+
+        ///validating password length
+        if (!passwordRegex.test(password))
+        {
+            return res.status(400).json({error:"Password must have at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and be 8+ characters long."});
         }
 
         //hash password for security before saving in the database
@@ -50,5 +63,125 @@ const signup= async (req,res)=>
     }
 };
 
-//export the module
-module.exports={signup};
+/**
+ * @desc   Login an existing user.
+ * @access Public
+ * @param  {Object} req - Express request object containing user data.
+ * @param  {Object} res - Express response object.
+ */
+
+const login = async (req,res)=>{
+    try{
+        const {email,password}=req.body;
+
+        //check if both fields are provided
+        if(!email||!password)
+        {
+            return res.status(400).json({message:"Email and Password are required"});
+        }
+
+        //check if the user exist
+        const user= await User.findOne({email});
+        if (!user)
+        {
+            return res.status(400).json({message:"Invalid Credentials"});
+        }
+        
+
+        //compare the provided pasword with the stored hashed password in DB
+        const isMatch= await bcrypt.compare(password,user.password);
+        if(!isMatch)
+        {
+            return res.status(400).json({message:"Invalid Credentials"});
+        }
+
+        //Generate a JWT token
+        const token= jwt.sign(
+            {id: user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN}
+        );
+        
+        //send success response
+        res.status(200).json({
+            message:"Login Successfull",
+            user : {id:user._id,name:user.name,email:user.email},
+            token
+        });
+    }catch(error){
+        console.error("Login Error",error);
+        res.status(500).json({message:"Login Failed",error:error.message});
+    }
+
+};
+
+
+/**
+ * @desc   Sends a password reset link to the user's registered email.
+ * @access Public
+ * @param  {Object} req - Express request object containing user data.
+ * @param  {Object} res - Express response object.
+ */
+
+const forgotPassword = async (req,res)=>{
+    try{
+        const {email}=req.body;
+
+        //check if email was provided
+        if(!email)
+        {
+            return res.status(400).json({message:"Email is required"});
+        }
+
+        //check if the email entered in valid
+        if (!gmailRegex.test(email))
+        {
+            return res.status(400).json({message:"Invalid email"});
+        }
+
+        //check if the user exist
+        const user= await User.findOne({email});
+        if (!user)
+        {
+            return res.status(400).json({message:"User not found"});
+        }
+
+        // Create a reset token (expires in 15 minutes)
+        const resetToken = jwt.sign(
+        { id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: "15m" }
+        );
+
+        //create a small transporter
+        const transporter=nodemailer.createTransport({
+            service:"gmail",
+            auth:{
+                user:process.env.EMAIL_USER,
+                pass:process.env.EMAIL_PASS
+            }
+        });
+        //resetlink with token
+        const resetLink=`http://localhost:3000/reset-password/${resetToken}`;
+
+        //email options
+        const mailOptions={
+            from:process.env.EMAIL_USER,
+            to:user.email,
+            subject:"Password Reset Request",
+            html:`<p>Click below link to reset your password</p>
+            <a href="${resetLink}">${resetLink}</a>`
+        };
+
+
+        //sent the mail
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({message:"Password Reset email sent to your email address!"});
+
+    }catch(error){
+        console.error("Forgot mail",error);
+        res.status(500).json({message:"Error sending reset link",error:error.message});
+    
+}};
+
+//export the modules
+module.exports={signup,login,forgotPassword};
