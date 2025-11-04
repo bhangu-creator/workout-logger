@@ -5,7 +5,6 @@
  * @requires jsonwebtoken
  */
 
-
 // Import JWT library to verify tokens
 const jwt = require('jsonwebtoken');
 
@@ -22,14 +21,14 @@ const authMiddleware = async (req, res, next) => {
         //extracts token from header 
         const authHeader=req.headers.authorization;
 
-        //checks token
-        if(!authHeader)
+        //checks if token exist
+        if((!authHeader || !authHeader.startsWith("Bearer ")))
         {
-            res.status(400).json({message:"Access Denied. No token provided"});
+            return res.status(401).json({message:"Access Denied. No token provided"});
         }
 
         //extracts actual token
-        const token= authHeader.split('')[1];
+        const token= authHeader.split(' ')[1];
         
         //verify the token format
         if(!token){
@@ -37,7 +36,7 @@ const authMiddleware = async (req, res, next) => {
         }
 
         //verify the token using JWT secret
-        const decoded = jwt.decode(toke,process.env.JWT_SECRET);
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
 
         //attach user info to req object
         req.user=decoded;

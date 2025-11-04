@@ -165,7 +165,7 @@ const forgotPassword = async (req,res)=>{
             }
         });
         //resetlink with token
-        const resetLink=`http://localhost:3000/reset-password/${resetToken}`;
+        const resetLink=`http://localhost:3000/api/auth/reset-password/${resetToken}`;
 
         //email options
         const mailOptions={
@@ -204,7 +204,7 @@ const resetPassword = async (req,res)=>
             return res.status(400).json({ message: "New password is required" });
         }
         
-        //validating password length
+        //validating password 
         if (!passwordRegex.test(newPassword))
         {
             return res.status(400).json({error:"Password must have at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and be 8+ characters long."});
@@ -224,6 +224,13 @@ const resetPassword = async (req,res)=>
 
         if(!user){
             return res.status(400).json({message:"Invalid or expired token"});
+        }
+
+        //verify if the new password is same as old password
+        isSamePassword=await bcrypt.compare(newPassword,user.password);
+        if (isSamePassword)
+        {
+            return res.status(400).json({message:"New Password cannot be same as Old Password"});
         }
 
         // Hash the new password
