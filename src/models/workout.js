@@ -9,7 +9,7 @@
 //importing required modules
 const mongoose = require("mongoose");
 
-//Define the User Scehema
+//Define the Workout Scehema
 const workoutSchema =new mongoose.Schema({
     user : {
         type: mongoose.Schema.Types.ObjectId,
@@ -23,23 +23,22 @@ const workoutSchema =new mongoose.Schema({
         required : [true,"Workout title is required"],
         maxlength : [30,"Title cannot exceeds 30 characters"]
     },
-    exercise:
+    type: 
     {
-        type:String,
-        required: [true,"Exercise name is required"],
-        maxlength : [500 , " Exercise cannot exceeds 500 characters"]
+    type: String,
+    enum: ["strength", "Cardio", "HIT", "yoga", "other"],
+    default: "other"
     },
-    duration:
+    exercises: [
     {
-        type: Number,
-        required: [true,"Workout duration is required"],
-        maxlength : [1400, "Duration cannot exceeds 24 hours"]
-    },
-    kcalBurned:
-    {
-        type:Number,
-        required: [true,"Kcal burned information is required"]
-    },
+        name: { type: String, required: true },
+        sets: { type: Number, default: 0 },
+        reps: { type: Number, default: 0 },
+        weight: { type: Number, default: 0 },
+        duration: { type: Number, default: 0 }, 
+        kcalBurned: { type: Number, default: 0 }
+    }
+    ],
     createdAt:
     {
         type:Date,

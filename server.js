@@ -15,6 +15,7 @@ const mongoose =require("mongoose");
 const dotenv = require("dotenv");
 const authUserRoutes =require("./src/routes/authUsersRoutes.js");
 const workoutController=require("./src/routes/workoutRoute.js");
+const workoutStatsRoutes= require("./src/routes/workoutStatsRoutes.js");
 
 //initialize the enviroment variables
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(express.json());
 //Register Routes
 app.use('/api/auth',authUserRoutes);
 app.use('/api/workouts',workoutController);
+app.use('/api/workouts/stats',workoutStatsRoutes);
 
 //Connecting to MongoDb and start the server
 mongoose.connect(process.env.MONGO_URI)

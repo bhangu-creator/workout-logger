@@ -188,6 +188,13 @@ const forgotPassword = async (req,res)=>{
     
 }};
 
+/**
+ * @desc   Resets the user's password after user forgot the password
+ * @access Public
+ * @param  {Object} req - Express request object containing user data.
+ * @param  {Object} res - Express response object.
+ */
+
 const resetPassword = async (req,res)=>
 {
     try{
