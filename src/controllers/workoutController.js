@@ -25,7 +25,6 @@ const createWorkout = async (req,res)=>{
     try{
 
         //extracting  all the workout realted details from the req body
-        // const {name,sets,reps,weight,duration,kcalBurned}=req.body.exercises;
         const {title,type,exercises}= req.body;
 
         //extracting attached user's id sent by the middleware
@@ -49,6 +48,19 @@ const createWorkout = async (req,res)=>{
     );
         }catch(error)
         {
+            if (error.name=="ValidationError")
+            {
+                const errors=Object.values(error.errors).map(e=>e.message);
+                if (error.errors.type && error.errors.type.kind=="enum")
+                {
+                    return res.status(400).json({
+                        success:false,
+                        message : "Error while creating a new workout",
+                        error: error.message,
+                        note: "Please use only these options for 'type': [strength,Cardio,HIT,yoga,other]"
+                    })
+                }
+            }
             console.error("Error while creating new workout",error);
             res.status(500).json({message:"Error while creating new workout",
                 error: error.message})
