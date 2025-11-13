@@ -2,7 +2,7 @@
  * @file Authentication Middleware
  * @desc Verifies JWT tokens and protects routes from unauthorized access
  * @module middleware/authMiddleware
- * @requires jsonwebtoken
+ * @requires jsonwebtokenConta
  */
 
 // Import JWT library to verify tokens

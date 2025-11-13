@@ -50,7 +50,6 @@ const createWorkout = async (req,res)=>{
         {
             if (error.name=="ValidationError")
             {
-                const errors=Object.values(error.errors).map(e=>e.message);
                 if (error.errors.type && error.errors.type.kind=="enum")
                 {
                     return res.status(400).json({
