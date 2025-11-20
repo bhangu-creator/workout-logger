@@ -7,7 +7,7 @@
  * @requires ../utils/trendHelper.js
  * @requires bcrypt
  * @requires jwt
- * @methods getWorkoutTypeBreakdown
+ * @methods getWorkoutTypeBreakdown, getWeeklyTrends, getPersonalRecordsStats
 */
 
 /**
@@ -98,7 +98,6 @@ const getWorkoutTypeBreakdown = async (req,res) =>
 
 
     }catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Error fetching stats", error: err.message });
   }
 
@@ -186,4 +185,211 @@ const getWeeklyTrends = async (req,res) =>
     }
 }
 
-module.exports={getWorkoutTypeBreakdown,getWeeklyTrends};
+/**
+ * @desc get data of the Personal Records set by the user
+ * @access Private
+ * @param {Object} req -> Express request Object
+ * @param {Object} res -> Express response Object
+ */
+const getPersonalRecordsStats= async (req,res)=>
+{
+    try{
+        
+        //extracting the userid sent by middleware
+        const userId= req.user.id;
+        const {ObjectId}= mongoose.Types;
+        
+        //extracing the workout details with the  longest duration
+        const workoutWithLongestDuration = await Workout.aggregate(
+        [
+            {
+            $match :
+            {
+                user: new ObjectId(userId)
+            }
+            },
+            {
+                $addFields: 
+                {
+                    longestDuration: { $ifNull : [ {$sum:"$exercises.duration"},0]},
+                }
+            },
+            {
+                $sort:{longestDuration:-1}
+            },
+            {
+                $limit:1
+            }
+            
+        ]);
+
+        //extracing the workout details with the maximum kcal burned
+        const workoutWithMaxKcalBurned = await Workout.aggregate(
+            [
+                {$match:
+                    {
+                        user: new ObjectId(userId)
+                    }
+                },
+                {
+                    $addFields:
+                    {
+                        maxKcalBurned : {  $ifNull:[ {$sum:"$exercises.kcalBurned"},0]}
+
+                    }
+                },
+                {
+                    $sort:{maxKcalBurned:-1}
+                },
+                {
+                    $limit:1
+                }
+            ]);
+
+        //extracting all the dates of the workouts logged by the user to compute longest/current streak
+        const dates = await Workout.aggregate(
+            [
+                {$match:
+                    {
+                        user: new ObjectId(userId)
+                    }
+                },
+                {
+                    $project:
+                    {
+                        date:
+                        {
+                            $dateTrunc:
+                            {
+                                date:"$createdAt",
+                                unit : "day"
+                            }
+                        }
+                    }
+                },
+                {
+                    $sort:{
+                        date:-1
+                    }
+                }
+            ]);
+
+        //etracting all the workout,kcal,duration count and compute their averages
+        const milestonesData = await Workout.aggregate(
+            [
+                {$match:
+                    {
+                        user:new ObjectId(userId)
+                    }
+                },
+                {
+                    $project:
+                    {
+                        duration : {$ifNull : [{ $sum:"$exercises.duration"},0]},
+                        KcalBurned: {$ifNull : [{ $sum:"$exercises.kcalBurned"},0]},
+
+                    }
+                },
+                {
+                    $group:
+                    {
+                        _id: null,
+                        totalWorkouts: {$sum:1},
+                        totalduration : {$sum:"$duration"},
+                        totalKcalBurned : {$sum:"$KcalBurned"},
+                        avgDuration: {  $avg: "$duration" },
+                        avgKcalBurned: {$avg: "$KcalBurned" },
+
+                    }
+                },
+                {
+                    $project:
+                    {
+                        _id: 0,
+                        totalWorkouts:1,
+                        totalduration:{$divide:["$totalduration",60]},
+                        totalKcalBurned:1,
+                        avgDuration: {$round:["$avgDuration",0]},
+                        avgKcalBurned:{$round:["$avgKcalBurned",0]}
+                    }
+                }
+            ]
+        )
+
+        //verify if the workout exists
+        if (!workoutWithLongestDuration.length || !workoutWithMaxKcalBurned.length || !dates.length ||!milestonesData.length) {
+            return res.status(404).json({message: "No workout records found for this user"});
+           }
+
+        //making the dates object values unique
+        const onlydates =dateQuery.getUniqueDateObjects(dates);
+        //calculating the current streak and longest streak from date array
+        const {currentStreak,longestStreak}= dateQuery.calculateTheLongestAndCurrentStreak(onlydates);
+
+        //extracting the longestDuration value from workout doc
+        const longestDuration=workoutWithLongestDuration[0].longestDuration;
+        //formatting the rest of the array to send back to response json
+        const longestDurationWorkoutFormatted= workoutWithLongestDuration.map(doc=>
+        {
+            const {_id,user,createdAt,__v,exercises,longestDuration, ...rest}= doc;
+            return {
+                ...rest,
+                date:createdAt,
+                exercises:exercises.map(ex=>
+                {
+                    const {_id, ...exRest}=ex;
+                    return {...exRest};
+                })
+            };
+
+        });
+
+        //extracting the maxkcalburned value from workout doc
+        const maxkcalburned=workoutWithMaxKcalBurned[0].maxKcalBurned;
+        //formatting the rest of the array to send back to response json
+        const maxkcalWorkoutFormated=workoutWithMaxKcalBurned.map(doc=>
+        {
+            const {_id,user,exercises,createdAt,__v,maxKcalBurned, ...rest}=doc;
+            return {
+                ...rest,
+                date:createdAt,
+                exercises:exercises.map(ex=>
+                {
+                    const {_id, ...exRest}= ex;
+                    return { ...exRest};
+                }
+                )
+            };
+        });
+
+
+        return res.status(200).json({
+            achievements:
+            {
+                duration:
+                {
+                    record:longestDuration,
+                    workout:longestDurationWorkoutFormatted
+                },
+                calories:
+                {
+                    record:maxkcalburned,
+                    workout : maxkcalWorkoutFormated
+
+                },
+                streaks:
+                {
+                    current : currentStreak,
+                    longest : longestStreak
+                }
+            },
+            milestones: milestonesData
+        });
+    }catch(error)
+    {
+        return res.status(500).json({message:"Server error while fetching user's Personal Records",error})
+    }
+
+}
+
+module.exports={getWorkoutTypeBreakdown,getWeeklyTrends,getPersonalRecordsStats};

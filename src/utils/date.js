@@ -91,4 +91,75 @@
         return getIsoWeekAndYear(dec28).week;
     }
 
-module.exports={weekrange,formatDate,getIsoWeekAndYear,getLastIsoOfYear};
+    /**
+     * @desc gets a dates array with date object and then make the array unique by deleting duplicate date objects
+     * @param {Object} date 
+     * @returns array with unique date objects
+     */
+
+    const getUniqueDateObjects = (dates)=>
+    {
+        const onlydates = dates.map(item=>item.date);
+        const seen = new Set();
+        const uniqueDates = [];
+        for(let indx=0;indx<onlydates.length;indx+=1)
+        {
+            let dateString = onlydates[indx].toISOString();
+            if(!seen.has(dateString))
+            {
+                seen.add(dateString)
+                uniqueDates.push(onlydates[indx])
+            }
+        }   
+        return uniqueDates;
+    }
+
+    /**
+     * @desc calculates the longest/current streak of user logging in the workouts
+     * @param {Object} date 
+     * @returns current streak and longest streak
+     */
+
+    const calculateTheLongestAndCurrentStreak = (onlydates)=>
+    {
+        if (onlydates.length==0)
+        {
+            const currentStreak=0;
+            const longestStreak=0;
+            return {currentStreak,longestStreak};
+        }
+        let currentDay=new Date();
+        currentDay.setHours(0,0,0,0);
+        let currentStreak=null;
+        let longestStreak = 0;
+        let countstreaks=0;
+        let indx=0
+        while(indx<onlydates.length)
+        {
+            dbDate=new Date(onlydates[indx]);
+            dbDate.setHours(0,0,0,0);
+            
+            if (currentDay.getTime()!=dbDate.getTime())
+            {
+                if(currentStreak==null)
+                {
+                    currentStreak=countstreaks;
+                } 
+                countstreaks=0;
+                currentDay=new Date(dbDate);
+            }
+            else
+            {
+                countstreaks+=1
+                currentDay.setDate(currentDay.getDate()-1);
+                indx+=1
+            }
+            longestStreak=Math.max(longestStreak,countstreaks);
+        }
+        if(currentStreak==null)
+        {currentStreak=countstreaks;}
+        return {currentStreak,longestStreak};
+        
+    }
+
+module.exports={weekrange,formatDate,getIsoWeekAndYear,getUniqueDateObjects,calculateTheLongestAndCurrentStreak,getLastIsoOfYear};

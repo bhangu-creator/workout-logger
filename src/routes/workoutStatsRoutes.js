@@ -10,7 +10,7 @@
 
 //importing the required modules and controller functions
 const express = require('express');
-const {getWorkoutTypeBreakdown,getWeeklyTrends } =require('../controllers/workoutStatsController.js');
+const {getWorkoutTypeBreakdown,getWeeklyTrends,getPersonalRecordsStats } =require('../controllers/workoutStatsController.js');
 const {authMiddleware} = require('../middleware/authUserMiddleware.js');
 
 //creates an express route object
@@ -23,6 +23,10 @@ router.get("/type-breakdown",authMiddleware,getWorkoutTypeBreakdown);
 //@route GET /api/workouts/stats/get-weekly-trends
 //@desc gets all the logged data of past 8 weeks to show user the workout trends
 router.get("/get-weekly-trends",authMiddleware,getWeeklyTrends);
+
+//@route GET /api/workouts/stats/getPersonalRecordsStats
+//@desc gets all the Personal Records set by user while logging the workouts
+router.get("/getPersonalRecordsStats",authMiddleware,getPersonalRecordsStats);
 
 //export the required module
 module.exports=router;
