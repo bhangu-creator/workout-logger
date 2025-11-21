@@ -274,7 +274,7 @@ const getPersonalRecordsStats= async (req,res)=>
                 }
             ]);
 
-        //etracting all the workout,kcal,duration count and compute their averages
+        //extracting all the workout,kcal,duration count and compute their averages
         const milestonesData = await Workout.aggregate(
             [
                 {$match:
@@ -307,7 +307,7 @@ const getPersonalRecordsStats= async (req,res)=>
                     {
                         _id: 0,
                         totalWorkouts:1,
-                        totalduration:{$divide:["$totalduration",60]},
+                        totalduration: { $round: [{ $divide: ["$totalduration", 60] }, 2] },
                         totalKcalBurned:1,
                         avgDuration: {$round:["$avgDuration",0]},
                         avgKcalBurned:{$round:["$avgKcalBurned",0]}
@@ -316,8 +316,120 @@ const getPersonalRecordsStats= async (req,res)=>
             ]
         )
 
+        //extracting all the user data to compute the most active day
+        const daysData = await Workout.aggregate(
+            [
+                {
+                    $match:{
+                        user: new ObjectId(userId)
+                    }
+                },
+                {
+                    $project:
+                    {
+                        workouts:{$size:{$ifNull:["$exercises",[]]}},
+                        totalKcalBurned: {$sum:"$exercises.kcalBurned"},
+                        totalDuration : {$sum:"$exercises.duration"},
+                        date: { $dateTrunc:{
+                            date:"$createdAt",
+                            unit: "day"
+                        }}
+                    }
+                },
+                {
+                    $group:
+                    {
+                        _id:"$date",
+                        workouts:{$sum:"$workouts"},
+                        totalKcalBurned:{$sum:"$totalKcalBurned"},
+                        totalDuration:{$sum:"$totalDuration"}
+                    }
+                },
+                {
+                    $sort:
+                    {
+                        workouts:-1,
+                        totalKcalBurned:-1,
+                        totalDuration:-1
+                    }
+                },
+                {
+                    $limit:1
+                },
+                {
+                    $project:
+                    {
+                        date: { $dateToString: { format: "%Y-%m-%d", date: "$_id" } },
+                        _id:0,
+                        workouts:1,
+                        totalKcalBurned:1,
+                        totalDuration:1
+                    }
+                }
+            ]
+        )
+
+        //extracting all the user data to compute the most week
+        const weekData= await Workout.aggregate(
+            [
+                {
+                    $match:
+                    {
+                        user:new ObjectId(userId)
+                    }
+                },
+                {
+                    $project:
+                    {
+                        workouts:{$size:{$ifNull:["$exercises",[]]}},
+                        totalKcalBurned: {$sum:"$exercises.kcalBurned"},
+                        totalDuration : {$sum:"$exercises.duration"},
+                        weekStart: { $dateTrunc:{
+                            date:"$createdAt",
+                            unit: "week"
+                        }}
+                    }
+                },
+                {
+                    $group:
+                    {
+                        _id:"$weekStart",
+                        workouts:{$sum:"$workouts"},
+                        totalKcalBurned:{$sum:"$totalKcalBurned"},
+                        totalDuration:{$sum:"$totalDuration"}
+                    }
+                },
+                {
+                    $sort:
+                    {
+                        workouts:-1,
+                        totalKcalBurned:-1,
+                        totalDuration:-1
+                    }
+                },
+                {
+                    $limit:1
+                },
+                {
+                    $project:
+                    {
+                    week: { $concat: [
+                        { $dateToString: { format: "%b %d %Y", date: "$_id" } },
+                        " - ",
+                        { $dateToString: { format: " %b %d %Y", date: { $dateAdd: { startDate: "$_id", unit: "day", amount: 6 } } } }
+                    ] },
+                    workouts: 1,
+                    totalKcalBurned: 1,
+                    totalDuration: 1,
+                    _id:0
+                }
+                },
+
+            ]
+        )
+
         //verify if the workout exists
-        if (!workoutWithLongestDuration.length || !workoutWithMaxKcalBurned.length || !dates.length ||!milestonesData.length) {
+        if (!workoutWithLongestDuration.length || !workoutWithMaxKcalBurned.length || !dates.length ||!milestonesData.length||!daysData.length||!weekData.length) {
             return res.status(404).json({message: "No workout records found for this user"});
            }
 
@@ -368,12 +480,12 @@ const getPersonalRecordsStats= async (req,res)=>
             {
                 duration:
                 {
-                    record:longestDuration,
+                    durationRecord:longestDuration,
                     workout:longestDurationWorkoutFormatted
                 },
                 calories:
                 {
-                    record:maxkcalburned,
+                    kcalRecord:maxkcalburned,
                     workout : maxkcalWorkoutFormated
 
                 },
@@ -383,7 +495,12 @@ const getPersonalRecordsStats= async (req,res)=>
                     longest : longestStreak
                 }
             },
-            milestones: milestonesData
+            milestones: milestonesData,
+            records:
+            {
+                mostActiveDay:daysData,
+                mostActiveWeek: weekData
+            }
         });
     }catch(error)
     {

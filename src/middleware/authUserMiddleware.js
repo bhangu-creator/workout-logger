@@ -2,7 +2,7 @@
  * @file Authentication Middleware
  * @desc Verifies JWT tokens and protects routes from unauthorized access
  * @module middleware/authMiddleware
- * @requires jsonwebtokenConta
+ * @requires jsonwebtoken
  */
 
 // Import JWT library to verify tokens
@@ -32,7 +32,7 @@ const authMiddleware = async (req, res, next) => {
         
         //verify the token format
         if(!token){
-            req.status(400).json({message:"Access Denied. Invalid token format"});
+            return req.status(400).json({message:"Access Denied. Invalid token format"});
         }
 
         //verify the token using JWT secret

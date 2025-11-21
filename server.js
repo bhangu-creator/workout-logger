@@ -28,8 +28,8 @@ app.use(express.json());
 
 //Register Routes
 app.use('/api/auth',authUserRoutes);
-app.use('/api/workouts',workoutController);
 app.use('/api/workouts/stats',workoutStatsRoutes);
+app.use('/api/workouts',workoutController);
 
 //Connecting to MongoDb and start the server
 mongoose.connect(process.env.MONGO_URI)
