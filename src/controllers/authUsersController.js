@@ -16,7 +16,7 @@ const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,15}$/;
-const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+const gmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
 /**
@@ -35,7 +35,7 @@ const signup= async (req,res)=>
         //check if user already exists
         const existingUser=await User.findOne({email});
         if (existingUser){
-            return res.status(400).json({message:"User already exists"});
+            return res.status(400).json({error:"User already exists"});
         }
 
         ///validating password length
@@ -60,7 +60,7 @@ const signup= async (req,res)=>
 
     } catch(error){
         console.error("Signup Error",error);
-        res.status(500).json({message:"Signup Failed, Server Error",error:error.message});
+        res.status(500).json({error:"Signup Failed, Server Error",error:error.message});
     }
 };
 
