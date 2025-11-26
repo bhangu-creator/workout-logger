@@ -24,7 +24,7 @@ const authMiddleware = async (req, res, next) => {
         //checks if token exist
         if((!authHeader || !authHeader.startsWith("Bearer ")))
         {
-            return res.status(401).json({message:"Access Denied. No token provided"});
+            return res.status(401).json({error:"Access Denied. No token provided"});
         }
 
         //extracts actual token
@@ -32,7 +32,7 @@ const authMiddleware = async (req, res, next) => {
         
         //verify the token format
         if(!token){
-            return req.status(400).json({message:"Access Denied. Invalid token format"});
+            return req.status(400).json({error:"Access Denied. Invalid token format"});
         }
 
         //verify the token using JWT secret

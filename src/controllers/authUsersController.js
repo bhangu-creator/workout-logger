@@ -78,14 +78,14 @@ const login = async (req,res)=>{
         //check if both fields are provided
         if(!email||!password)
         {
-            return res.status(400).json({message:"Email and Password are required"});
+            return res.status(400).json({error:"Email and Password are required"});
         }
 
         //check if the user exist
         const user= await User.findOne({email});
         if (!user)
         {
-            return res.status(400).json({message:"Invalid Credentials"});
+            return res.status(400).json({error:"Invalid Credentials"});
         }
         
 
@@ -93,7 +93,7 @@ const login = async (req,res)=>{
         const isMatch= await bcrypt.compare(password,user.password);
         if(!isMatch)
         {
-            return res.status(400).json({message:"Invalid Credentials"});
+            return res.status(400).json({error:"Invalid Credentials"});
         }
 
         //Generate a JWT token
@@ -109,7 +109,7 @@ const login = async (req,res)=>{
         });
     }catch(error){
         console.error("Login Error",error);
-        res.status(500).json({message:"Login Failed",error:error.message});
+        res.status(500).json({error:"Login Failed",error:error.message});
     }
 
 };

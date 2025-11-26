@@ -1,26 +1,18 @@
-//importing the required modules
+// Importing hooks, components, utilities, and axios
 import { useState } from "react";
-import logo from "../assets/logo.png";
+import LogoHeader from "./LogoHeader.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {validateEmail,validateUsername,validateStrongPassword} from "../utils/validators.js";
 
-
-// Signup Component
-// - Handles user registration UI
-// - Performs client-side validation
-// - Sends signup data to backend API
-// - Displays backend validation errors
-// - Redirects to login page on successful signup
 
 function Signup()
 {
     
-    //initialzing the navigate hook
+    // React Router hook for redirecting the user
     const navigate = useNavigate();
 
-    //Initializing fromData state
-    //purpose - use to store the data input in form by user
-    //value - formData: form data, setFormData - update form data when react state changes
+    // Form data state
     const [formData, setFormData] = useState(
         {
             name:"",
@@ -29,9 +21,7 @@ function Signup()
         }
     );
 
-    //Initializing error state
-    //purpose - use to store the errors thrown by the input form
-    //value - errors: error values, setErrors - assign the error to specific input field
+    // Form field error messages
     const [errors,setErrors] = useState(
         {
             name:"",
@@ -40,66 +30,32 @@ function Signup()
         }
     )
 
- 
-    //Initializing server  state
-    //purpose - use to store the message sent by server side and to hold the loading status
-    //value - serverMessage : stores the sever message, setServerMessage : display the message sent via server
-    //      - loading - holds true or false , setLoading: changes the loading state to make button disable or enable
-
+    // Message returned from backend (success or error)
     const [serverMessage,setServerMessage] = useState("");
+
+     // Loading state for disabling button + showing spinner text
     const [loading,setLoading]= useState(false);
-
-
-    // Validates form fields before sending data to backend
-    //Returns true if all fields are valid; otherwise populates errors state
-
+    
+    // Validates email and password fields
     const validateForm =()=>
     {
         const newErrors={name:"",email:"",password:""};
 
-        if (!formData.name.trim())
-        {
-            newErrors.name="Username is required";
-        }
-        else if(formData.name.trim().length>30)
-        {
-            newErrors.name="Username is too long";
-
-        }
-
-        if (!formData.email.trim())
-        {
-            newErrors.email="Email is required";
-        }
-        else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-        {
-            newErrors.email="Invalid email format";
-        }
-
-        if (!formData.password.trim())
-        {
-            newErrors.password="Password is required";
-        }
-        else if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,15}$/.test(formData.password))
-        {
-            newErrors.password="Password must have at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long."
-        }
+        newErrors.name=validateUsername(formData.name);
+        newErrors.email=validateEmail(formData.email);
+        newErrors.password=validateStrongPassword(formData.password);
 
         setErrors(newErrors);
-       return Object.values(newErrors).every(error => error === "");
+        return Object.values(newErrors).every(error => error === "");
 
-
-    }
+    };
     
     return (
         
         <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
 
-            {/*Top Left Logo* with the App name*/}
-                <div className="absolute top-4 left-4 flex items-center gap-2">
-                    <img src={logo} alt="Workout Logger Logo" className="w-14 h-14 rounded-full object-cover" />
-                    <span className="text-red-600 font-bold text-2xl">Workout Logger</span>
-                </div>
+             {/* Reusable header logo */}
+            <LogoHeader/>
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-3xl font-bold mb-6 text-center">
                     Create Account
@@ -107,37 +63,35 @@ function Signup()
 
                  {/* Form Starts */}
                  <form
-
-                 //onSubmit function gets called when clicked on signup button
                   onSubmit={ async (e)=>
                     {
                         //prevents the browser to refresh
                         e.preventDefault();
-                        //validating if the form input values 
+
+                        // Client-side validation check
                         const isValid=validateForm();
                         if(!isValid){return}
-                        console.log("Form is valid, sending the data to backend");
 
-                        //sent the Post API to backend
-                        //endpoint hit - /api/auth/signup
-                        //data sent - form data including - username,email,password 
-                        //response expected -  200/201 status - OK, 400/404 status - Bad request
+                        // Prepare UI before sending API request
                         setLoading(true);
                         setServerMessage("");
                         try{
-
+                            // Sending Signup POST request
                             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,formData);
                             
                             //backend return message
                             setServerMessage(response.data.message||"Signup Successfull");
 
-                            //wait 1 sec than redirect to login
+                            // Small delay for smooth UX
                             await new Promise(res=> setTimeout(res,1000));
+
+                            // Redirect user to login
                             navigate("/login")
                         }catch(error){
-                            console.log(error.response)
+                            // Display backend error or fallback error
                             setServerMessage(error.response?.data?.error||"Something went wrong");
                         } finally{
+                            // Always stop loading spinner
                             setLoading(false);
                         }
                     }
@@ -212,5 +166,4 @@ function Signup()
     );
 }
 
-//exporting the required modules
 export default Signup;
