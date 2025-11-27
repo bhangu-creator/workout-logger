@@ -29,8 +29,6 @@ function ForgotPassword()
             {/*Reusable Logo Header*/}
             <LogoHeader/>
 
-
-
          </div>
 
 
