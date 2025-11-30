@@ -31,4 +31,5 @@ build/
 commonStatusCodes.txt
 
 #others
-practice.js
+practice/
+

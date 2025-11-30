@@ -10,6 +10,7 @@
 */
 
 //Importing required modules and models
+const { error } = require('console');
 const User =require('../models/user.js');
 const bcrypt= require("bcryptjs");
 const crypto = require('crypto');
@@ -129,13 +130,13 @@ const forgotPassword = async (req,res)=>{
         //check if email was provided
         if(!email)
         {
-            return res.status(400).json({message:"Email is required"});
+            return res.status(400).json({error:"Email is required"});
         }
 
         //check if the email entered in valid
         if (!gmailRegex.test(email))
         {
-            return res.status(400).json({message:"Invalid email"});
+            return res.status(400).json({error:"Invalid email"});
         }
 
         //check if the user exist
@@ -144,7 +145,6 @@ const forgotPassword = async (req,res)=>{
         {
             return res.status(200).json({message:"if that email exists, a reset link has been sent!"});
         }
-
         // Creates a random token
         const resetToken = crypto.randomBytes(32).toString('hex');
         
@@ -165,7 +165,7 @@ const forgotPassword = async (req,res)=>{
             }
         });
         //resetlink with token
-        const resetLink=`http://localhost:3000/api/auth/reset-password/${resetToken}`;
+        const resetLink=`${process.env.VITE_FRONTEND_URL}resetpassword/${resetToken}`;
 
         //email options
         const mailOptions={
@@ -180,11 +180,11 @@ const forgotPassword = async (req,res)=>{
         //sent the mail
         await transporter.sendMail(mailOptions);
 
-        res.status(200).json({message:"Password Reset email sent to your email address!"});
+        res.status(200).json({message:"if that email exists, a reset link has been sent!"});
 
     }catch(error){
         console.error("Forgot mail",error);
-        res.status(500).json({message:"Error sending reset link",error:error.message});
+        res.status(500).json({error:"Error sending reset link",error:error.message});
     
 }};
 
@@ -198,19 +198,19 @@ const forgotPassword = async (req,res)=>{
 const resetPassword = async (req,res)=>
 {
     try{
-        //get token from url params and new password from body
+        //get token from url pa  rams and new password from body
         const {token} = req.params;
         const {newPassword}= req.body;
-
+    
         //validate inputs
         if(!token){
-            return res.status(400).json({message:"Reset token is required"});
+            return res.status(400).json({error:"Reset token is required"});
+        }
+ 
+        if (!newPassword) {
+            return res.status(400).json({ error: "New password is required" });
         }
 
-        if (!newPassword) {
-            return res.status(400).json({ message: "New password is required" });
-        }
-        
         //validating password 
         if (!passwordRegex.test(newPassword))
         {
@@ -222,22 +222,22 @@ const resetPassword = async (req,res)=>
             .createHash('sha256')
             .update(token)
             .digest('hex');
-        
+
         //find user with matching hashed token and not expired
         const user= await User.findOne({
             resetPasswordToken: hashedToken,
             resetPasswordExpires: { $gt: Date.now() }
         });
-
+         
         if(!user){
-            return res.status(400).json({message:"Invalid or expired token"});
+            return res.status(400).json({error:"Invalid or expired token"});
         }
 
         //verify if the new password is same as old password
         isSamePassword=await bcrypt.compare(newPassword,user.password);
         if (isSamePassword)
         {
-            return res.status(400).json({message:"New Password cannot be same as Old Password"});
+            return res.status(400).json({error:"New Password cannot be same as Old Password"});
         }
 
         // Hash the new password
@@ -250,11 +250,11 @@ const resetPassword = async (req,res)=>
         await user.save();
 
         res.status(200).json({ 
-            message: "Password reset successful! You can now login."});
+            message: "Password reset successfull! You can now login."});
     } catch (error) {
         console.error("Reset password error:", error);
         res.status(500).json({ 
-            message: "Error resetting password", 
+            error: "Error resetting password", 
             error: error.message 
         });
         }

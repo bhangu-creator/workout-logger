@@ -35,3 +35,12 @@ export function validatePassword(pswd)
     if(!pswd.trim()) return "password is required";
     return ""
 }
+
+//validate the confirm password input
+
+export function confirmPassword(pswdstr1,pswdstr2)
+{
+    if(pswdstr1.trim()!==pswdstr2.trim()) {return "Entered password is not a match"}
+    else {return ""}
+
+}
