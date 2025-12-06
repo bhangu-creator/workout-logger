@@ -50,7 +50,7 @@ const validateFormDate = ()=>
 
         <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
              {/* Reusable header logo */}
-            <LogoHeader/>
+            <LogoHeader mode="absolute"/>
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-3xl font-bold mb-6 text-center"> Log In </h2>
             {/*Form starts*/}
@@ -77,7 +77,7 @@ const validateFormDate = ()=>
                         await new Promise(res=> setTimeout(res,1000));
 
                         // Redirect user to dashboard
-                        navigate("/dashboard");
+                        navigate("/workouts");
 
                      }catch(error)
                      {
@@ -112,9 +112,11 @@ const validateFormDate = ()=>
                 <Link to="/forgotpassword"  className="text-blue-600 text-sm hover:underline cursor-pointer">Forgot password</Link>
 
                 {/*Submit Button*/}
-                {serverMessage && (
-                   <p className={`text-center text-sm mt-2 ${serverMessage.includes("Success")?"text-green-600" : "text-red-500"}`}>{serverMessage}</p>
-                )}
+                {!serverMessage.toLowerCase().includes("success") &&
+                (
+                   <p className="text-center text-sm mt-2 text-red-500">{serverMessage}</p>
+                )
+                }
                 <button type="submit" disabled={loading} className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50">
                     {loading? "Logging In...":"Log In"}
                 </button>
