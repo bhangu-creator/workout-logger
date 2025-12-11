@@ -3,7 +3,7 @@ import { useState,useEffect } from "react";
 import { API_BASE_URL,ENDPOINTS } from "../api/endpoints";
 import { useNavigate } from "react-router-dom";
 
-function WorkoutsList({searchText})
+function WorkoutsList({onView,onEdit,searchText})
 {
 
 
@@ -167,8 +167,8 @@ function WorkoutsList({searchText})
             <div className="text-gray-500">{w.totalCalories} kcal</div>
 
             <div className="flex justify-end gap-3">
-              <button className="text-blue-600">View</button>
-              <button className="text-yellow-600">Edit</button>
+              <button className="text-blue-600" onClick={()=>onView(w)}>View</button>
+              <button className="text-yellow-600" onClick={()=>onEdit(w)}>Edit</button>
               <button className="text-red-600">Delete</button>
             </div>
 
