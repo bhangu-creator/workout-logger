@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import LogoHeader from "./LogoHeader.jsx";
 import {validateEmail,validatePassword} from "../utils/validators.js";
 import axios from "axios";
+import { API_BASE_URL,ENDPOINTS } from "../api/endpoints.js";
 
 
 function Login()
@@ -67,7 +68,7 @@ const validateFormDate = ()=>
                     setServerMessage("");
                      try{
                         // Sending login POST request
-                        const response= await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,formData);
+                        const response= await axios.post(API_BASE_URL+ENDPOINTS.LOGIN,formData);
                         setServerMessage(response.data.message||"Login Successfull")
                         
                         // Store JWT token in browser storage

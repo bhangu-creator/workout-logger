@@ -21,7 +21,7 @@ const workoutSchema =new mongoose.Schema({
     {
         type: String,
         required : [true,"Workout title is required"],
-        maxlength : [30,"Title cannot exceeds 30 characters"]
+        maxlength : [50,"Title cannot exceeds 30 characters"]
     },
     type: 
     {

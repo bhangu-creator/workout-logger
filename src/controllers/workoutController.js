@@ -30,18 +30,31 @@ const createWorkout = async (req,res)=>{
         //extracting attached user's id sent by the middleware
         const userId= req.user.id;
 
+        // //verify the exercise array
+        // if(!Array.isArray(exercises))
+        // {
+        //     return res.status(400).json({error:"Invalid input"})
+        // }
+
+        // //remove garbage values from exercise array if any
+        // const filteredExercises= exercises.filter((ex)=>
+        // {
+        //     ex!=null && typeof ex=="object" && !Array.isArray(ex)
+        // })
+
         //verify if the required details are sent by the user
         if(!title||!exercises || exercises.length==0){
-            return res.status(400).json({message:"Title and exercises are required"});
+            return res.status(400).json({error:"Title or exercises are required"});
 
         }
 
         //create the new workout
         const newWorkout= await Workout.create({user:userId,title,type,exercises});
+        
 
         if(!newWorkout)
         {
-            return res.status(500).json({message:"Workout could not get created due to server issue"});
+            return res.status(500).json({error:"Workout could not get created due to server issue"});
         }
 
         res.status(201).json({message:"New workout is created successfully",newWorkout}
@@ -158,12 +171,11 @@ const updateWorkout = async (req,res)=>{
         }
         
         //normalize the sent workout Types
-        const normalizedType = type? type.toLowerCase():  undefined;
-
+        // const normalizedType = type? type.toLowerCase():  undefined;
         //verify if the workout id exists for the sent user's id and update the workout details
         const updatedWorkout= await Workout.findOneAndUpdate(
             {_id:id,user:userId},  //match workout id with user's id
-            {title,type:normalizedType,exercises},
+            {title,type,exercises},
             { new: true, runValidators: true }
         );
 

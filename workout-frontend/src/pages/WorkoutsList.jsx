@@ -1,9 +1,6 @@
-import authRequest from "../utils/authRequest";
 import { useState,useEffect } from "react";
-import { API_BASE_URL,ENDPOINTS } from "../api/endpoints";
-import { useNavigate } from "react-router-dom";
 
-function WorkoutsList({onView,onEdit,searchText})
+function WorkoutsList({onView,onEdit,searchText, WorkoutsData})
 {
 
 
@@ -20,32 +17,7 @@ function WorkoutsList({onView,onEdit,searchText})
     //initializing the state to store the page number
     const [curretPage,setCurrentPage] = useState(1);
 
-    //initialzing the navigate state 
-    const navigate=useNavigate();
-
-    //calling the getAllWorkouts function whenever the workouts page loads up
-    useEffect(()=>{ getAllWorkouts()},[]);
-
-
-    //initializing a workout state to store all the data of the user
-    const [WorkoutsData,setWorkouts] = useState([]);
-
-    // returns all the workouts stored in db and logged by the user
-    async function getAllWorkouts()
-    {
-        
-        try{
-        const workouts= await authRequest("get",API_BASE_URL+ENDPOINTS.GET_ALL_WORKOUTS);
-        setWorkouts(workouts.data.workouts);
-        }catch(error)
-        {
-            navigate('/login')
-            setWorkouts(error)
-        }
-    }
-
     //calculating the total duration and calories 
-    const text=searchText.toLowerCase();
     const transformed= WorkoutsData.map(w=>
     {
       const totalDuration= w.exercises.reduce((sum,ex)=> sum+ex.duration,0);
@@ -57,6 +29,7 @@ function WorkoutsList({onView,onEdit,searchText})
     )
 
     //filtering the data according to the search bar value
+    const text=searchText.toLowerCase();
     const filteredWorkouts  = transformed.filter(w=>
     {
       return (
