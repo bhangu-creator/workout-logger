@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 
-function WorkoutsList({onView,onEdit,searchText, WorkoutsData})
+function WorkoutsList({onView,onEdit,searchText, WorkoutsData,onDelete})
 {
 
 
@@ -128,26 +128,53 @@ function WorkoutsList({onView,onEdit,searchText, WorkoutsData})
 
       {/* List Rows */}
       <ul className="flex flex-col gap-2 mt-2">
-        {paginationWorkouts.map(w => (
+        {
+        WorkoutsData.length==0?(  
+            <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+              <p className="text-lg font-medium">No workouts yet</p>
+              <p className="text-sm mt-2">
+                Start logging workouts to build your history.
+              </p>
+            </div>):
+   (paginationWorkouts.map(w => (
           <li
             key={w._id}
             className="grid grid-cols-5 gap-6 items-center bg-white px-4 py-3 rounded-lg shadow"
           >
-
             <div className="font-medium">{w.title}</div>
             <div className="text-gray-600">{w.type}</div>
             <div className="text-gray-500">{w.totalDuration} min</div>
             <div className="text-gray-500">{w.totalCalories} kcal</div>
 
             <div className="flex justify-end gap-3">
-              <button className="text-blue-600" onClick={()=>onView(w)}>View</button>
-              <button className="text-yellow-600" onClick={()=>onEdit(w)}>Edit</button>
-              <button className="text-red-600">Delete</button>
+              <button className="  flex items-center gap-1
+                          text-gray-500
+                          hover:text-blue-600
+                          transition-all duration-200
+                          hover:scale-105" onClick={()=>onView(w)}>View</button>
+              <button className="flex items-center gap-1
+                          px-2 py-1
+                          border border-gray-300
+                          rounded-md
+                          text-gray-600
+                          hover:border-orange-500
+                          hover:text-orange-600
+                          hover:bg-orange-50
+                            transition-all duration-200" onClick={()=>onEdit(w)}>Edit</button>
+              <button className="  flex items-center gap-1
+                            px-2 py-1
+                            border border-red-400
+                            rounded-md
+                            text-red-500
+                            hover:bg-red-500
+                            hover:text-white
+                            hover:border-red-500
+                            transition-all duration-200" onClick={()=>onDelete(w._id)}>Delete</button>
             </div>
-
           </li>
-        ))}
+        )))}
       </ul>
+      
 {/*showing pagination on UI */}
 <div className="flex justify-center mt-6 gap-2">
   {

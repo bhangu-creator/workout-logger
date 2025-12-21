@@ -3,10 +3,12 @@ import { useState,useEffect } from "react";
 import LogoHeader from "./LogoHeader"
 import WorkoutsList from "./WorkoutsList";
 import WorkoutModal from "./WorkoutModal";
-import AddEditPopUpModal from "./AddEditPopUpModal";
+import AddEditDeletePopUpModal from "./AddEditDeletePopUpModal";
 import { API_BASE_URL,ENDPOINTS } from "../api/endpoints";
 import authRequest from "../utils/authRequest";
 import { useNavigate } from "react-router-dom";
+import TopRightUser from "./TopRightUser";
+import DeleteWorkoutModal from "./DeleteWorkoutModal";
 
 
 function Workouts()
@@ -20,12 +22,18 @@ function Workouts()
     const [modalView,setModalView] = useState(false);
     //state used to store the data that need to be sent to modal for view/edit
     const [modalData,setModalData]= useState(null);
-    //state used to show success pop up message after log/update workout
+    //state used to show success pop up modal after log/update workout
     const [showPopUp,setShowPopUp] = useState(
         { state:false,
           mode: ""
         }
     );
+
+    //state used to show delete pop up modal after deleting a workout
+    const [showDeleteWorkout,setShowDeleteWorkout] = useState({
+        state:false,
+        wId:""
+    });
 
     //initialzing the navigate state 
     const navigate=useNavigate();
@@ -50,7 +58,7 @@ function Workouts()
         }
     }
 
-    const handleAddWorkoutToList=(reponseWorkout,mode)=>
+    const handleAddEditDeleteWorkoutToList=(reponseWorkout,mode)=>
     {
         if (mode=="log"){
         setWorkouts(prev=> [reponseWorkout.newWorkout ,...prev]);
@@ -69,6 +77,11 @@ function Workouts()
                 )
             )
         }
+        else if (mode==="delete")
+        {
+            setWorkouts(prev=> prev.filter(w=>w._id!=reponseWorkout))
+
+        }
     }
 
 
@@ -77,7 +90,13 @@ function Workouts()
         //parent div
         <div className="min-h-screen bg-gray-100 relative">
             {/*component shows the logo of app*/}
+            <div className="flex items-center justify-between px-6">
+
             <LogoHeader mode="inline" />
+
+            <TopRightUser></TopRightUser>
+
+            </div>
             {/* shows the log workout and search bar in line on top of the workouts list*/}
             <div className="w-full mt-4">
                 <div className="flex items-center justify-between mb-4 px-[170px]">
@@ -91,26 +110,31 @@ function Workouts()
             </div>
             {/*Workout List Component shows all the workouts along with pagination */}
             <div className="px-6 mt-6">
-                <div className="w-full flex justify-center">                
+                <div className="w-full flex justify-center">    
             <WorkoutsList onView={(workout)=>{setModalData(workout); setModalView(true); setModalMode("view");}}
-            onEdit={(workout)=>{setModalData(workout); setModalMode("edit"); setModalView(true);}} searchText={searchText} WorkoutsData={WorkoutsData}/>
+            onEdit={(workout)=>{setModalData(workout); setModalMode("edit"); setModalView(true);}} 
+            onDelete= {(w)=>setShowDeleteWorkout({state:true,wId:w})}
+            searchText={searchText} 
+            WorkoutsData={WorkoutsData}/>
+
+
             {modalView && (
-                <WorkoutModal open={modalView} mode={modalMode} data={modalData} onClose={()=>setModalView(false)} handleAddWorkoutToList={handleAddWorkoutToList} popupset={(mode)=>setShowPopUp({state:true,mode:mode})}></WorkoutModal>
+                <WorkoutModal open={modalView} mode={modalMode} data={modalData} onClose={()=>setModalView(false)} handleAddEditDeleteWorkoutToList={handleAddEditDeleteWorkoutToList} popupset={(mode)=>setShowPopUp({state:true,mode:mode})}></WorkoutModal>
             )}
+
+
             {showPopUp.state && (
-                <AddEditPopUpModal onClose={()=>setShowPopUp({state:false,mode:""})} mode={showPopUp.mode}></AddEditPopUpModal>
+                <AddEditDeletePopUpModal onClose={()=>setShowPopUp({state:false,mode:""})} mode={showPopUp.mode}></AddEditDeletePopUpModal>
+            )}
+            
+            {showDeleteWorkout.state && (
+                <DeleteWorkoutModal workoutId={showDeleteWorkout.wId} chooseDelete={()=>setShowDeleteWorkout({state:false,wId:""})} popupset={(mode)=>setShowPopUp({state:true,mode:mode})} handleAddEditDeleteWorkoutToList={handleAddEditDeleteWorkoutToList}></DeleteWorkoutModal>
             )}
             
             </div>
             </div>
         </div>
-
-
-
-
-
     )
 }
 
-//exporting the required component
 export default Workouts;

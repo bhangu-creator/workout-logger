@@ -4,7 +4,7 @@ import {validateSpecificExercise,canSubmitWorkout} from "../utils/validators";
 import authRequest from "../utils/authRequest";
 import {API_BASE_URL,ENDPOINTS} from "../api/endpoints";
 
-function WorkoutModal({ open, mode, data, onClose, handleAddWorkoutToList,popupset }) {
+function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToList,popupset }) {
 
     if (!open) return null;
 
@@ -115,7 +115,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddWorkoutToList,popups
                 if (isLog)
                 {
                     const response = await authRequest("post",API_BASE_URL+ENDPOINTS.POST_WORKOUT,workoutPayload);
-                    handleAddWorkoutToList(response.data,"log");
+                    handleAddEditDeleteWorkoutToList(response.data,"log");
                     setServerMessage(response?.data?.message || "Workout Logged Successfully");
                     onClose();
                     popupset("log")
@@ -123,10 +123,10 @@ function WorkoutModal({ open, mode, data, onClose, handleAddWorkoutToList,popups
                 else if(isEdit)
                 {
                     const response = await authRequest("put",API_BASE_URL+ENDPOINTS.PUT_WORKOUT+workoutId,workoutPayload);
-                    handleAddWorkoutToList(response.data,"edit");
+                    handleAddEditDeleteWorkoutToList(response.data,"edit");
                     setServerMessage(response?.data?.message || "Workout Updated Successfully");
                     onClose();
-                     popupset("edit")
+                    popupset("edit")
                 }
 
             }catch(error)

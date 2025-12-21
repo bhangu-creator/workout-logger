@@ -216,7 +216,7 @@ const deleteWorkoutById = async (req,res)=>{
 
         if(!workout)
         {
-            return res.status(404).json({message:"Workout not found or unauthorized"});
+            return res.status(404).json({error:"Workout not found or unauthorized"});
         }
 
         res.status(200).json({message:"Workout has been delete successfully"});
@@ -224,8 +224,7 @@ const deleteWorkoutById = async (req,res)=>{
         }catch(error)
         {
             console.error("Error deleting the workout",error);
-            res.status(500).json({message:"Server Error while deleting the workout",
-                error: error.message})
+            res.status(500).json({error:"Server Error while deleting the workout",})
         };
 };
 

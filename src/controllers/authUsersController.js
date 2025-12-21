@@ -99,7 +99,7 @@ const login = async (req,res)=>{
 
         //Generate a JWT token
         const token= jwt.sign(
-            {id: user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN}
+            {id: user._id,email:user.email,username:user.name},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN}
         );
         
         //send success response

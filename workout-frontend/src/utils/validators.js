@@ -13,7 +13,7 @@ export function validateEmail(email)
 export function validateUsername(name)
 {
     if(!name.trim()) return "Username is required";
-    else if (name.trim().length>30) return "username is too long";
+    else if (name.trim().length>15) return "username is too long";
     return ""
 
 }

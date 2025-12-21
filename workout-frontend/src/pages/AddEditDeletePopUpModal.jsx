@@ -2,6 +2,7 @@ function AddEditPopUpModal({onClose,mode})
 {
     const isLog = mode=="log";
     const isEdit = mode=="edit";
+    const isDelete= mode=="delete"
 
     return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -13,6 +14,9 @@ function AddEditPopUpModal({onClose,mode})
                 )}
                 {isEdit && (
                     <h2 className="text-lg font-semibold text-gray-800">Workout Updated Successfully!!!</h2>
+                )}
+                {isDelete && (
+                    <h2 className="text-lg font-semibold text-gray-800">Workout Deleted Successfully!!!</h2>
                 )}
                 </div>
                 <div className="flex justify-center mt-5">
