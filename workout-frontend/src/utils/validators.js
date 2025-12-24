@@ -206,3 +206,26 @@ export function validateSpecificExercise(key,value)
         
         return errors;
     }
+
+
+    //validating the date ranges of custom dates
+
+    export function validateDateRanges(cusutomDates)
+    {
+        const {from,to}= cusutomDates;
+        const error="";
+        const now =new Date();
+        
+        if(!from && !to) return "Please provide from and to date ranges"
+        else if(!from && to) return "Please provide from date range"
+        else if (from && !to) return "Please provide to date range"
+        else if (from && to)
+        {
+            const fromDate= new Date(from);
+            const toDate=new Date(to);
+            if(fromDate>toDate) return "from date cannot come after to date"
+            if(fromDate>now || toDate>now) return "from OR to date cannot come after today's date"
+        }
+        else return error
+
+    }

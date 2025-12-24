@@ -6,5 +6,6 @@ export const ENDPOINTS ={
     GET_ALL_WORKOUTS:"/api/workouts/",
     POST_WORKOUT : "/api/workouts/",
     PUT_WORKOUT:"/api/workouts/",
-    DELETEWORKOUT :"/api/workouts/"
+    DELETEWORKOUT :"/api/workouts/",
+    GET_WORKOUTS_STATS_BY_TYPE :"/api/workouts/stats/type-breakdown"
 };

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-export async function authRequest(method,url,data=null)
+export async function authRequest(method,url,data=null,params=null)
 {
     const token =localStorage.getItem("token");
 
@@ -15,6 +15,7 @@ export async function authRequest(method,url,data=null)
         method,
         url,
         data,
+        params,
         headers:{
             Authorization:`Bearer ${token}`
         }

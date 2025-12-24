@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { validateEmail } from "../utils/validators";
-import LogoHeader from "./LogoHeader";
+import LogoHeader from "../components/LogoHeader";
 import axios from "axios";
 
 function ForgotPassword()

@@ -1,7 +1,7 @@
 // Importing hooks, components, utilities, and axios
 import { useState } from "react"; 
 import { useNavigate, Link } from "react-router-dom";
-import LogoHeader from "./LogoHeader.jsx";
+import LogoHeader from "../components/LogoHeader.jsx";
 import {validateEmail,validatePassword} from "../utils/validators.js";
 import axios from "axios";
 import { API_BASE_URL,ENDPOINTS } from "../api/endpoints.js";

@@ -4,7 +4,9 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Workouts from "./pages/Workouts";
+import WorkoutsByType from "./pages/WorkoutsByType";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 
 
 function App() {
@@ -15,7 +17,8 @@ function App() {
     <Route path="/login" element={<Login/>}/>
     <Route path="/forgotpassword" element={<ForgotPassword/>}/>
     <Route path="/resetPassword/:token" element={<ResetPassword/>}/>
-    <Route path="/workouts"element={<ProtectedRoute><Workouts/></ProtectedRoute>}/>
+    <Route path="/workouts" element={<ProtectedRoute><Workouts/></ProtectedRoute>}/>
+    <Route path="/workoutsByType" element={<ProtectedRoute><WorkoutsByType/></ProtectedRoute>} />
     </Routes>
     </BrowserRouter>
   );

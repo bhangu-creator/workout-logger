@@ -1,14 +1,15 @@
 //importing the required components and hooks
 import { useState,useEffect } from "react";
-import LogoHeader from "./LogoHeader"
-import WorkoutsList from "./WorkoutsList";
-import WorkoutModal from "./WorkoutModal";
-import AddEditDeletePopUpModal from "./AddEditDeletePopUpModal";
+import LogoHeader from "../components/LogoHeader.jsx";
+import WorkoutsList from "../components/WorkoutsList";
+import WorkoutModal from "../components/WorkoutModal";
+import AddEditDeletePopUpModal from "../components/AddEditDeletePopUpModal";
 import { API_BASE_URL,ENDPOINTS } from "../api/endpoints";
 import authRequest from "../utils/authRequest";
 import { useNavigate } from "react-router-dom";
-import TopRightUser from "./TopRightUser";
-import DeleteWorkoutModal from "./DeleteWorkoutModal";
+import TopRightUser from "../components/TopRightUser";
+import DeleteWorkoutModal from "../components/DeleteWorkoutModal";
+import StatsDrawer from "../components/StatsDrawer";
 
 
 function Workouts()
@@ -34,6 +35,10 @@ function Workouts()
         state:false,
         wId:""
     });
+
+    //state used to decide wether to show the stats drawer or not
+    const [showStatsDrawer,setShowStatsDrawer] = useState(false);
+
 
     //initialzing the navigate state 
     const navigate=useNavigate();
@@ -101,7 +106,11 @@ function Workouts()
             <div className="w-full mt-4">
                 <div className="flex items-center justify-between mb-4 px-[170px]">
                     <input  value={searchText} type="text" placeholder="Search Workouts" className="border border-gray-300 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-red-500" onChange={(e)=>setSearchText(e.target.value)}/>
-                        <button className="bg-red-500 text-white px-4 py-2 rounded ml-4" onClick={()=>
+                    <div className="flex items-center ml-auto">
+                    <button className="bg-blue-400 font-medium px-4 py-2 rounded ml-4" type="button" 
+                    onClick={()=>setShowStatsDrawer(true)}>View Stats</button>
+                    </div>
+                        <button className="bg-red-500 text-white px-4 py-2 rounded ml-4 font-medium" onClick={()=>
                             {setModalMode("log");
                             setModalData(null);
                             setModalView(true);}
@@ -117,6 +126,8 @@ function Workouts()
             searchText={searchText} 
             WorkoutsData={WorkoutsData}/>
 
+            {/**show the stats drawer */}
+            <StatsDrawer onclose={()=>setShowStatsDrawer(false)} isOpen={showStatsDrawer}></StatsDrawer>
 
             {modalView && (
                 <WorkoutModal open={modalView} mode={modalMode} data={modalData} onClose={()=>setModalView(false)} handleAddEditDeleteWorkoutToList={handleAddEditDeleteWorkoutToList} popupset={(mode)=>setShowPopUp({state:true,mode:mode})}></WorkoutModal>

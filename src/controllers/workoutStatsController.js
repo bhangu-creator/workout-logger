@@ -56,7 +56,7 @@ const getWorkoutTypeBreakdown = async (req,res) =>
             else if(period=="last_month")
             {
                 startDate = new Date(now.getFullYear(),now.getMonth()-1,1);
-                endDate = new Date(now.getFullYear(),now.getMonth()-1,1);
+                endDate = new Date(now.getFullYear(),now.getMonth(),1);
             }
  
         }
