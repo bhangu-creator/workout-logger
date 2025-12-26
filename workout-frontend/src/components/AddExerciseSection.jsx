@@ -90,6 +90,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.weight}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
+                            placeholder="in kgs"
                             onChange={(e)=>setFormData(prev=>({...prev , weight:e.target.value}))}
                         />                        
                     </div>
@@ -103,6 +104,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.duration}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
+                            placeholder="in minutes"
                             onChange={(e)=>setFormData(prev=>({...prev , duration:e.target.value}))}
                         />                        
                     </div>

@@ -307,7 +307,7 @@ const getPersonalRecordsStats= async (req,res)=>
                     {
                         _id: 0,
                         totalWorkouts:1,
-                        totalduration: { $round: [{ $divide: ["$totalduration", 60] }, 2] },
+                        totalduration: 1,
                         totalKcalBurned:1,
                         avgDuration: {$round:["$avgDuration",0]},
                         avgKcalBurned:{$round:["$avgKcalBurned",0]}
@@ -430,7 +430,7 @@ const getPersonalRecordsStats= async (req,res)=>
 
         //verify if the workout exists
         if (!workoutWithLongestDuration.length || !workoutWithMaxKcalBurned.length || !dates.length ||!milestonesData.length||!daysData.length||!weekData.length) {
-            return res.status(404).json({message: "No workout records found for this user"});
+            return res.status(200).json({message: "No workout records found for this user"});
            }
 
         //making the dates object values unique
@@ -504,7 +504,7 @@ const getPersonalRecordsStats= async (req,res)=>
         });
     }catch(error)
     {
-        return res.status(500).json({message:"Server error while fetching user's Personal Records",error})
+        return res.status(500).json({error:"Server error while fetching user's Personal Records",error})
     }
 
 }

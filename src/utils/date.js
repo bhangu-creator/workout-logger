@@ -120,46 +120,52 @@
      * @returns current streak and longest streak
      */
 
-    const calculateTheLongestAndCurrentStreak = (onlydates)=>
-    {
-        if (onlydates.length==0)
-        {
-            const currentStreak=0;
-            const longestStreak=0;
-            return {currentStreak,longestStreak};
-        }
-        let currentDay=new Date();
-        currentDay.setHours(0,0,0,0);
-        let currentStreak=null;
-        let longestStreak = 0;
-        let countstreaks=0;
-        let indx=0
-        while(indx<onlydates.length)
-        {
-            dbDate=new Date(onlydates[indx]);
-            dbDate.setHours(0,0,0,0);
-            
-            if (currentDay.getTime()!=dbDate.getTime())
-            {
-                if(currentStreak==null)
-                {
-                    currentStreak=countstreaks;
-                } 
-                countstreaks=0;
-                currentDay=new Date(dbDate);
-            }
-            else
-            {
-                countstreaks+=1
-                currentDay.setDate(currentDay.getDate()-1);
-                indx+=1
-            }
-            longestStreak=Math.max(longestStreak,countstreaks);
-        }
-        if(currentStreak==null)
-        {currentStreak=countstreaks;}
-        return {currentStreak,longestStreak};
-        
+const calculateTheLongestAndCurrentStreak = (onlydates) => {
+  if (!onlydates || onlydates.length === 0) {
+    return { currentStreak: 0, longestStreak: 0 };
+  }
+
+  // Normalize all dates to YYYY-MM-DD and remove duplicates
+  const normalizeDate = (date) =>
+    new Date(date).toISOString().split("T")[0];
+
+  const uniqueDays = Array.from(
+    new Set(onlydates.map(normalizeDate))
+  ).sort((a, b) => new Date(b) - new Date(a)); // descending (latest first)
+
+  const todayStr = normalizeDate(new Date());
+
+  let longestStreak = 0;
+  let currentStreak = 0;
+  let streak = 0;
+
+  let prevDate = null;
+
+  for (let i = 0; i < uniqueDays.length; i++) {
+    const currDate = new Date(uniqueDays[i]);
+
+    if (!prevDate) {
+      streak = 1;
+    } else {
+      const diff =
+        (prevDate - currDate) / (1000 * 60 * 60 * 24);
+
+      if (diff === 1) {
+        streak += 1;
+      } else {
+        streak = 1;
+      }
     }
+
+    longestStreak = Math.max(longestStreak, streak);
+    prevDate = currDate;
+  }
+    // current streak only counts if it starts today
+    if (uniqueDays[0] === todayStr) {
+      currentStreak = streak;
+    }
+
+  return { currentStreak, longestStreak };
+};
 
 module.exports={weekrange,formatDate,getIsoWeekAndYear,getUniqueDateObjects,calculateTheLongestAndCurrentStreak,getLastIsoOfYear};

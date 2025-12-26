@@ -6,6 +6,7 @@ import authRequest from "../utils/authRequest";
 import { API_BASE_URL, ENDPOINTS } from "../api/endpoints";
 import { validateDateRanges } from "../utils/validators";
 import WorkoutTypePie from "../components/WorkoutTypePie";
+import { useNavigate } from "react-router-dom";
 
 function WorkoutsByType() {
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -15,6 +16,7 @@ function WorkoutsByType() {
     const [serverError, setServerError] = useState("");
     const [loading, setLoading] = useState(true);
     const [breakdownData, setBreakdownData] = useState(null);
+    const navigate= useNavigate();
 
     const handleCustomDates = (custom) => {
         setCustomDates(custom);
@@ -44,7 +46,14 @@ function WorkoutsByType() {
                 setLoading(false);
             } catch (error) {
                 console.error(error);
-                setServerError("Something Went Wrong!!");
+                if(error?.response?.request?.status===401)
+                {
+                    setServerError("Session Expired Logging you out!!");
+                    localStorage.removeItem("token")
+                    setTimeout(()=>{navigate("/login",{replace:true})},2000)
+                }
+                else
+                { setServerError("Something Went Wrong!!");}
             }
         } else {
             try {

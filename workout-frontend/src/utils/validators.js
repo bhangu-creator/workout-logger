@@ -229,3 +229,55 @@ export function validateSpecificExercise(key,value)
         else return error
 
     }
+
+    //function to convert the duration fromminutes to hrs/days
+
+    export function formatDuration(minutes)
+    {
+        if(minutes<90)
+        {
+            return `${minutes} min`;
+        }
+
+        else if(minutes<1440)
+        {
+            const hrs= Math.floor(minutes/60);
+            const mins= minutes%60;
+            return mins===0? `${hrs}hr` : `${hrs} hr ${mins} min`;
+            
+        }
+
+        else
+        {
+            const days=Math.floor(minutes/1440);
+            const mins= minutes%1440
+            const hrs = Math.floor(mins/60);
+            return hrs===0 ? `${days} day${days>1?"s":""}` : `${days} day${days>1?"s":""} ${hrs} hr`;
+        }
+
+    }
+
+    //function to format the workout personal records durations 
+    export function formatEveryDuration(allDurations)
+    {
+        const formatDurationObj = {maxDuration:"",totalDuration:"",averageDuration:"",activeDayDuration:"",activeWeekDuration:""};
+        Object.keys(allDurations).forEach(key=>
+        {
+            formatDurationObj[key]=formatDuration(allDurations[key])
+        }
+        )   
+
+        return formatDurationObj;
+        
+    }
+
+
+    export function formatDate(startDate)
+    {
+        if(Number(startDate)<=0){return null}
+        const newDate=new Date(startDate);
+        const formatStart= newDate.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+        const returStr = `${formatStart}`
+        return returStr
+
+    }

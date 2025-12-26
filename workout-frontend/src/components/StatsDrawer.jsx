@@ -19,8 +19,14 @@ function StatsDrawer({onclose,isOpen})
                 onClick={()=> {window.open("/workoutsByType","_blank")
                     onclose();
                 }}>View Workouts by Type</div>
-                <div className=" bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium">View Workouts Trend</div>
-                <div className=" bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium">View Personal Records</div>
+                <div className=" bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
+                onClick={()=> {window.open("/workoutsTrends","_blank")
+                onclose();
+                }}>View Workouts Trend</div>
+                <div className=" bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
+                onClick={()=> {window.open("/workoutRecords","_blank")
+                onclose();
+                }}>View Personal Records</div>
             </div>
 
         </div>
