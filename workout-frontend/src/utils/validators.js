@@ -90,7 +90,8 @@ export function validateExercise(name,sets,reps,weight,duration,calories)
 
     //validating calories type
     if (calories!=null && calories!=""){
-    if(Number.isNaN(c)) errors.calories="calories should be numeric"
+        console.log(c)
+    if(Number.isNaN(c)) {errors.calories="calories should be numeric"}
     //validating reps value
     else if (c<1 || c>10000 )  errors.calories="calories value must be between 1-10000"
     }

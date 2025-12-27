@@ -109,8 +109,16 @@ const validateFormDate = ()=>
                 onChange={(e)=>setFormData(prev=>({...prev , password:e.target.value}))}/>
                 {errors.password && (<p className="text-red-500 text-sm mb-2">{errors.password}</p>)}
 
+                <div className="flex justify-between">
+
                 {/* forgot password link*/ }
                 <Link to="/forgotpassword"  className="text-blue-600 text-sm hover:underline cursor-pointer">Forgot password</Link>
+
+                  {/* Signup redirect link*/ }
+                <p className="text-sm text-center ">Don't have an account?
+                    <Link to="/signup"  className="text-blue-600 text-sm hover:underline cursor-pointer p-1">Sign up</Link>
+                </p>
+                </div>
 
                 {/*Submit Button*/}
                 {!serverMessage.toLowerCase().includes("success") &&

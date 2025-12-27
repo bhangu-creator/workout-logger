@@ -2,8 +2,9 @@
 import { useState } from "react";
 import LogoHeader from "../components/LogoHeader.jsx";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import {validateEmail,validateUsername,validateStrongPassword} from "../utils/validators.js";
+import {API_BASE_URL,ENDPOINTS} from "../api/endpoints.js";
 
 
 function Signup()
@@ -77,7 +78,7 @@ function Signup()
                         setServerMessage("");
                         try{
                             // Sending Signup POST request
-                            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,formData);
+                            const response = await axios.post(API_BASE_URL+ENDPOINTS.SIGNUP,formData);
                             
                             //backend return message
                             setServerMessage(response.data.message||"Signup Successfull");
@@ -152,6 +153,13 @@ function Signup()
                     {serverMessage && (
                         <p className={`text-center text-sm mt-2 ${serverMessage.includes("Success")?"text-green-600" : "text-red-500"}`}>{serverMessage}</p>
                     )}
+
+                    {/* login redirect link*/ }
+                    <div className="flex justify-between">
+                        <p className="text-sm text-center ">Already have an account?
+                            <Link to="/login"  className="text-blue-600 text-sm hover:underline cursor-pointer p-1">Log in</Link>
+                        </p>
+                    </div>
                     
                     {/*Submit Button, button shows loading state while API is running*/}
                     <button type="Submit" 

@@ -223,7 +223,7 @@ function WorkoutRecords() {
 
                 {[
                   ["Date", activeDayStrs?? "----"],
-                  ["Workouts Logged", recordsData?.mostActiveDay[0]?.workouts ?? 0],
+                  ["Exercises Logged", recordsData?.mostActiveDay[0]?.workouts ?? 0],
                   ["Total Calories", recordsData?.mostActiveDay[0]?.totalKcalBurned ?? 0],
                   ["Total Duration", allDurationsFormatted.activeDayDuration],
                 ].map(([label, value]) => (
@@ -244,7 +244,7 @@ function WorkoutRecords() {
 
                 {[
                   ["Week", recordsData?.mostActiveWeek[0]?.week ?? "----" ],
-                  ["Workouts Logged", recordsData?.mostActiveWeek[0]?.workouts ?? 0],
+                  ["Exercises Logged", recordsData?.mostActiveWeek[0]?.workouts ?? 0],
                   ["Total Calories", recordsData?.mostActiveWeek[0]?.totalKcalBurned ?? 0],
                   ["Total Duration", allDurationsFormatted.activeWeekDuration],
                 ].map(([label, value]) => (

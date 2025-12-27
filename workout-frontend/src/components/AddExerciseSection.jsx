@@ -15,11 +15,12 @@ function AddExerciseSection({resetForm,onAddExercise})
     })
 
     const [errors,setErrors] = useState({})
+
   
 
      const validateForm = ()=>
     {
-       const newErrors=validateExercise(formData.name,formData.sets,formData.reps,formData.weight,formData.duration,formData.calories);
+       const newErrors=validateExercise(formData.name,formData.sets,formData.reps,formData.weight,formData.duration,formData.kcalBurned);
        setErrors(newErrors);
        return Object.keys(newErrors).length==0;
         

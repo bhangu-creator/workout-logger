@@ -1,4 +1,3 @@
-//importing the required components and hooks
 import { useState,useEffect } from "react";
 import LogoHeader from "../components/LogoHeader.jsx";
 import WorkoutsList from "../components/WorkoutsList";

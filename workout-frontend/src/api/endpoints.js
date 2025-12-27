@@ -1,8 +1,11 @@
 export const API_BASE_URL ="http://localhost:3000";
 
 export const ENDPOINTS ={
-
+        
+    SIGNUP : "/api/auth/signup",
     LOGIN:"/api/auth/login",
+    RESETPASSWORD : "/api/auth/reset-password/",
+    FORGOTPASSWORD: "/api/auth/forgotpassword",
     GET_ALL_WORKOUTS:"/api/workouts/",
     POST_WORKOUT : "/api/workouts/",
     PUT_WORKOUT:"/api/workouts/",
