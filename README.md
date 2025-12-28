@@ -1,4 +1,4 @@
-# 🏋️‍♂️ Workout Logger
+# 🏋️‍♂️ workout-analytics-platform
 
 > A production-ready MERN stack fitness tracking application with advanced analytics and data visualization.
 
