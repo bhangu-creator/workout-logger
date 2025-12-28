@@ -52,7 +52,13 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.name}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
-                            onChange={(e)=>setFormData(prev=>({...prev , name:e.target.value}))}
+                            onChange={(e)=>{setFormData(prev=>({...prev , name:e.target.value})); 
+                                    const exname="exname"
+                                     if(errors[exname])
+                                     {
+                                        setErrors(prev=>({...prev, [exname]:""}));
+                                     }
+                                    }}
                         />
                     </div>
                         {errors.exname &&(
@@ -65,7 +71,13 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.sets}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
-                            onChange={(e)=>setFormData(prev=>({...prev , sets:e.target.value}))}
+                            onChange={(e)=>{setFormData(prev=>({...prev , sets:e.target.value}));
+                                    const sets="sets"
+                                     if(errors[sets])
+                                     {
+                                        setErrors(prev=>({...prev, [sets]:""}));
+                                     }
+                                    }}
                         />                      
                     </div>
                         {errors.sets &&(
@@ -78,7 +90,13 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.reps}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
-                            onChange={(e)=>setFormData(prev=>({...prev , reps:e.target.value}))}
+                            onChange={(e)=>{setFormData(prev=>({...prev , reps:e.target.value}));
+                                    const reps="reps"
+                                     if(errors[reps])
+                                     {
+                                        setErrors(prev=>({...prev, [reps]:""}));
+                                     }
+                                    }}
                         />                     
                     </div>
                         {errors.reps &&(
@@ -92,7 +110,13 @@ function AddExerciseSection({resetForm,onAddExercise})
                             value={formData.weight}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             placeholder="in kgs"
-                            onChange={(e)=>setFormData(prev=>({...prev , weight:e.target.value}))}
+                            onChange={(e)=>{setFormData(prev=>({...prev , weight:e.target.value}));
+                                    const weight="weight"
+                                     if(errors[weight])
+                                     {
+                                        setErrors(prev=>({...prev, [weight]:""}));
+                                     }
+                                    }}
                         />                        
                     </div>
                         {errors.weight &&(
@@ -106,7 +130,13 @@ function AddExerciseSection({resetForm,onAddExercise})
                             value={formData.duration}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             placeholder="in minutes"
-                            onChange={(e)=>setFormData(prev=>({...prev , duration:e.target.value}))}
+                            onChange={(e)=>{setFormData(prev=>({...prev , duration:e.target.value}));
+                                    const duration="duration"
+                                     if(errors[duration])
+                                     {
+                                        setErrors(prev=>({...prev, [duration]:""}));
+                                     }
+                                    }}
                         />                        
                     </div>
                         {errors.duration &&(
@@ -119,7 +149,13 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.kcalBurned}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
-                            onChange={(e)=>setFormData(prev=>({...prev , kcalBurned:e.target.value}))}
+                            onChange={(e)=>{setFormData(prev=>({...prev , kcalBurned:e.target.value}));
+                                    const calories="calories"
+                                     if(errors[calories])
+                                     {
+                                        setErrors(prev=>({...prev, [calories]:""}));
+                                     }
+                                    }}
 
                         />                         
                     </div>

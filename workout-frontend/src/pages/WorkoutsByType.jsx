@@ -213,7 +213,7 @@ function WorkoutsByType() {
                     {/* ===== RIGHT SIDE: Pie Chart ===== */}
                     <div className="w-[700px] min-h-[400px] flex items-center justify-center bg-white rounded-lg shadow-md p-6">
                         {/*Showing the overall workouts data  */}
-                        <div className="ml-5">
+                        <div>
                             {breakdownData && !(loading) && (
                                 <div className="flex justify-center gap-8">
                                     <div className="bg-gray-100 px-6 py-3 rounded-lg text-center">

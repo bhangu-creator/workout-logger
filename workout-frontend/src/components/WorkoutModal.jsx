@@ -171,7 +171,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                                 value={title}
                                 disabled={isView}
-                                onChange={(e) => setTitle(e.target.value)}
+                                onChange={(e) => {setTitle(e.target.value); setTitleError("");}}
                             />
                         </div>
 
@@ -186,7 +186,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                                 value={type}
                                 disabled={isView}
-                                onChange={(e) => setType(e.target.value)}
+                                onChange={(e) => {setType(e.target.value);  setTypeError("")}}
                             >
                                 <option value="">Select workout type</option>
                                 {WORKOUT_TYPES.map((w) => (
