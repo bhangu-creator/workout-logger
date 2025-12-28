@@ -59,6 +59,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     {/* Delete button for an exercise (hidden in view mode) */}
                     {!isView && (
                         <button
+                            type="button"
                             className="absolute top-2 right-3 text-red-500 hover:text-red-700"
                             onClick={() => onDeleteExercise(indx)}
                         >
