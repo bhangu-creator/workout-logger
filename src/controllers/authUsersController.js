@@ -166,6 +166,7 @@ const forgotPassword = async (req,res)=>{
         });
         //resetlink with token
         const resetLink=`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`;
+        console.log(`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`,"link to be sent")
 
         //email options
         const mailOptions={
@@ -182,10 +183,11 @@ const forgotPassword = async (req,res)=>{
             `
         };
 
-
+console.log("mail isgoing to sent")
 
         //sent the mail
         await transporter.sendMail(mailOptions);
+        console.log("here it is")
         
         res.status(200).json({message:"if that email exists, a reset link has been sent!"});
 
