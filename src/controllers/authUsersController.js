@@ -158,15 +158,20 @@ const forgotPassword = async (req,res)=>{
 
         //create a small transporter
         const transporter=nodemailer.createTransport({
-            service:"gmail",
-            auth:{
-                user:process.env.EMAIL_USER,
-                pass:process.env.EMAIL_PASS
-            }
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 10000,
         });
+        
         //resetlink with token
         const resetLink=`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`;
-        console.log(`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`,"link to be sent")
 
         //email options
         const mailOptions={
@@ -183,11 +188,15 @@ const forgotPassword = async (req,res)=>{
             `
         };
 
-console.log("mail isgoing to sent")
+
+        //verify the mail
+        await transporter.verify();
+        console.log("✅ SMTP verified");
+
 
         //sent the mail
         await transporter.sendMail(mailOptions);
-        console.log("here it is")
+        console.log("✅ Email sent");
         
         res.status(200).json({message:"if that email exists, a reset link has been sent!"});
 
