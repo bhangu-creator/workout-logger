@@ -13,7 +13,7 @@
 ## 📸 Screenshots
 
 <!-- SCREENSHOTS  will be added HERE -->
-*(Dashboard, Workout List, Analytics, etc.)*
+Demo Video- https://youtu.be/z_NlMguU3j4
 
 ---
 
@@ -22,7 +22,7 @@
 After 3.5 years as an SDET, I realized my passion was in **building products**, not just testing them. I took a focused year to:
 
 - ✅ Master full-stack development (MERN stack)
-- ✅ Complete 200+ algorithmic problems (LeetCode Neetcode 150)
+- ✅ Complete 250+ algorithmic problems (LeetCode Neetcode 150)
 - ✅ Build this production-ready application from scratch
 
 **This project showcases:**
