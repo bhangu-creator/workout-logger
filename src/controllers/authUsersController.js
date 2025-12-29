@@ -165,15 +165,21 @@ const forgotPassword = async (req,res)=>{
             }
         });
         //resetlink with token
-        const resetLink=`${process.env.VITE_FRONTEND_URL}resetpassword/${resetToken}`;
+        const resetLink=`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`;
 
         //email options
         const mailOptions={
             from:process.env.EMAIL_USER,
             to:user.email,
             subject:"Password Reset Request",
-            html:`<p>Click below link to reset your password</p>
-            <a href="${resetLink}">${resetLink}</a>`
+            html: `
+            <p>You requested a password reset.</p>
+            <p>This link will expire in 15 minutes.</p>
+            <a href="${resetLink}" target="_blank">
+                Reset Password
+            </a>
+            <p>If you didn’t request this, please ignore this email.</p>
+            `
         };
 
 

@@ -116,9 +116,8 @@ function ForgotPassword() {
 
                     {/* Server response message */}
                     {serverMessage && (
-                        <p className="text-sm text-center mt-2 text-green-600">
-                            {serverMessage}
-                        </p>
+
+                        <p className={`text-sm text-center mt-2 ${serverMessage.toLowerCase().includes("timeout")?"text-red-500":"text-green-600"}`}>{serverMessage}</p>
                     )}
 
                     {/* Submit button */}
