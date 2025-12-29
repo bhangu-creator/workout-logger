@@ -155,6 +155,7 @@ const forgotPassword = async (req,res)=>{
         user.resetPasswordToken=hashedToken;
         user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
         await user.save();
+        console.log("mail to be sent")
 
         //create a small transporter
         const transporter=nodemailer.createTransport({
@@ -166,6 +167,7 @@ const forgotPassword = async (req,res)=>{
         });
         //resetlink with token
         const resetLink=`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`;
+        console.log(`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`,"this is the link")
 
         //email options
         const mailOptions={
@@ -182,9 +184,13 @@ const forgotPassword = async (req,res)=>{
             `
         };
 
+        console.log("mail will be sent in following line")
+
 
         //sent the mail
         await transporter.sendMail(mailOptions);
+
+        console.log("mail sent")
 
         res.status(200).json({message:"if that email exists, a reset link has been sent!"});
 
