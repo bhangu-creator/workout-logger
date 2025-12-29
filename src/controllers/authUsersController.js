@@ -18,6 +18,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,15}$/;
 const gmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const sgMail = require('@sendgrid/mail');
 
 
 /**
@@ -123,88 +124,57 @@ const login = async (req,res)=>{
  * @param  {Object} res - Express response object.
  */
 
-const forgotPassword = async (req,res)=>{
-    try{
-        const {email}=req.body;
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-        //check if email was provided
-        if(!email)
-        {
-            return res.status(400).json({error:"Email is required"});
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
         }
 
-        //check if the email entered in valid
-        if (!gmailRegex.test(email))
-        {
-            return res.status(400).json({error:"Invalid email"});
+        if (!gmailRegex.test(email)) {
+            return res.status(400).json({ error: "Invalid email" });
         }
 
-        //check if the user exist
-        const user= await User.findOne({email});
-        if (!user)
-        {
-            return res.status(200).json({message:"if that email exists, a reset link has been sent!"});
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(200).json({ message: "if that email exists, a reset link has been sent!" });
         }
-        // Creates a random token
+
         const resetToken = crypto.randomBytes(32).toString('hex');
-        
-        //hashed the token before storing it in db
         const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-        //store the Hashed token in the database
-        user.resetPasswordToken=hashedToken;
+        user.resetPasswordToken = hashedToken;
         user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
         await user.save();
 
-        //create a small transporter
-        const transporter=nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-            connectionTimeout: 10000,
-            greetingTimeout: 10000,
-            socketTimeout: 10000,
-        });
-        
-        //resetlink with token
-        const resetLink=`${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`;
+        const resetLink = `${process.env.VITE_FRONTEND_URL}/resetpassword/${resetToken}`;
 
-        //email options
-        const mailOptions={
-            from:process.env.EMAIL_USER,
-            to:user.email,
-            subject:"Password Reset Request",
-            html: `
+        const msg = {
+        to: user.email,
+        from: process.env.SENDGRID_VERIFIED_SENDER,
+        subject: "Password Reset Request",
+        html: `
             <p>You requested a password reset.</p>
             <p>This link will expire in 15 minutes.</p>
-            <a href="${resetLink}" target="_blank">
-                Reset Password
-            </a>
-            <p>If you didn’t request this, please ignore this email.</p>
-            `
+            <a href="${resetLink}" target="_blank">Reset Password</a>
+            <p>If you didn't request this, please ignore this email.</p>
+        `,
         };
 
 
-        //verify the mail
-        await transporter.verify();
-        console.log("✅ SMTP verified");
+        await sgMail.send(msg);
+        console.log("Email sent");
 
+        res.status(200).json({ message: "if that email exists, a reset link has been sent!" });
 
-        //sent the mail
-        await transporter.sendMail(mailOptions);
-        console.log("✅ Email sent");
-        
-        res.status(200).json({message:"if that email exists, a reset link has been sent!"});
-
-    }catch(error){
-        console.error("Forgot mail",error);
-        res.status(500).json({error:"Error sending reset link",error:error.message});
-    
-}};
+    } catch (error) {
+        console.error("Forgot mail error:", error);
+        res.status(500).json({ error: "Error sending reset link", details: error.message });
+    }
+};
 
 /**
  * @desc   Resets the user's password after user forgot the password
