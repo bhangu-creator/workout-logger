@@ -47,3 +47,14 @@ mongoose.connect(process.env.MONGO_URI)
 .catch((err) => {
   console.error("MongoDB connection error:", err);
 });
+
+//initializing the centralized error handling middlware
+app.use((err,req,res,next)=>
+{
+  const statusCode = err.statusCode || 500;
+  const message= err.message|| "Interval Server Error";
+  res.status(statusCode).json({
+    success:false,
+    error:message})
+}
+)

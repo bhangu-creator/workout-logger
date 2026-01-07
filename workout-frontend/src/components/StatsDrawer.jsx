@@ -3,6 +3,7 @@
 // - isOpen: boolean that controls whether the drawer is visible
 // - onclose: function to close the drawer (usually sets isOpen to false)
 function StatsDrawer({ onclose, isOpen }) {
+  const DRAWER_CLOSES_MS= 500;
   return (
     <>
       {/* 
@@ -41,8 +42,8 @@ function StatsDrawer({ onclose, isOpen }) {
           <div
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
-              window.open("/workoutsByType", "_blank");
               onclose(); // close the drawer after navigation
+              setTimeout(()=>{window.open("/workoutsByType", "_blank");},DRAWER_CLOSES_MS)
             }}
           >
             View Workouts by Type
@@ -52,8 +53,8 @@ function StatsDrawer({ onclose, isOpen }) {
           <div
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
-              window.open("/workoutsTrends", "_blank");
               onclose(); // close the drawer after navigation
+              setTimeout(()=>{window.open("/workoutsTrends", "_blank");},DRAWER_CLOSES_MS)
             }}
           >
             View Workouts Trend
@@ -63,8 +64,8 @@ function StatsDrawer({ onclose, isOpen }) {
           <div
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
-              window.open("/workoutRecords", "_blank");
               onclose(); // close the drawer after navigation
+              setTimeout(()=>{window.open("/workoutRecords", "_blank");},DRAWER_CLOSES_MS)
             }}
           >
             View Personal Records

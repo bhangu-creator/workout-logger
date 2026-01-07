@@ -7,10 +7,10 @@
  * @requires jwt
  * @requires nodemailer
  * @methods signup,login,forgotPassword,resetPassword
+ * @class AppError
 */
 
 //Importing required modules and models
-const { error } = require('console');
 const User =require('../models/user.js');
 const bcrypt= require("bcryptjs");
 const crypto = require('crypto');
@@ -19,7 +19,7 @@ const nodemailer = require("nodemailer");
 const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,15}$/;
 const gmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const sgMail = require('@sendgrid/mail');
-
+const AppError = require("../utils/centeralizedError.js");
 
 /**
  * @desc   Registers a new user.
@@ -28,7 +28,7 @@ const sgMail = require('@sendgrid/mail');
  * @param  {Object} res - Express response object.
  */
 
-const signup= async (req,res)=>
+const signup= async (req,res,next)=>
 {
     try {
 
@@ -37,13 +37,13 @@ const signup= async (req,res)=>
         //check if user already exists
         const existingUser=await User.findOne({email});
         if (existingUser){
-            return res.status(400).json({error:"User already exists"});
+            throw new AppError(400,"User already exists");
         }
 
         ///validating password length
         if (!passwordRegex.test(password))
         {
-            return res.status(400).json({error:"Password must have at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and be 8+ characters long."});
+            throw new AppError(400,"Password must have at least 1 uppercase, 1 lowercase, 1 number, 1 special character, and be 8+ characters long.");
         }
 
         //hash password for security before saving in the database
@@ -62,7 +62,14 @@ const signup= async (req,res)=>
 
     } catch(error){
         console.error("Signup Error",error);
-        res.status(500).json({error:"Signup Failed, Server Error",error:error.message});
+        //if the error originates from the AppError
+        if (error instanceof AppError)
+        {
+            return next(error)
+        }
+
+        //internal Error
+        next(new AppError(500,"Signup Failed"));
     }
 };
 
@@ -73,21 +80,21 @@ const signup= async (req,res)=>
  * @param  {Object} res - Express response object.
  */
 
-const login = async (req,res)=>{
+const login = async (req,res,next)=>{
     try{
         const {email,password}=req.body;
 
         //check if both fields are provided
         if(!email||!password)
         {
-            return res.status(400).json({error:"Email and Password are required"});
+            throw new AppError(400,"Email and Password are required");
         }
 
         //check if the user exist
         const user= await User.findOne({email});
         if (!user)
         {
-            return res.status(400).json({error:"Invalid Credentials"});
+            throw new AppError(400,"Invalid Credentials");
         }
         
 
@@ -95,7 +102,8 @@ const login = async (req,res)=>{
         const isMatch= await bcrypt.compare(password,user.password);
         if(!isMatch)
         {
-            return res.status(400).json({error:"Invalid Credentials"});
+            throw new AppError(400,"Invalid Credentials");
+
         }
 
         //Generate a JWT token
@@ -105,13 +113,20 @@ const login = async (req,res)=>{
         
         //send success response
         res.status(200).json({
-            message:"Login Successfull",
+            message:"Login Successful",
             user : {id:user._id,name:user.name,email:user.email},
             token
         });
     }catch(error){
         console.error("Login Error",error);
-        res.status(500).json({error:"Login Failed",error:error.message});
+        //if the error originates from the AppError
+        if (error instanceof AppError)
+        {
+            return next(error)
+        }
+
+        //internal Error
+        next(new AppError(500,"Login Failed"));
     }
 
 };
@@ -124,10 +139,13 @@ const login = async (req,res)=>{
  * @param  {Object} res - Express response object.
  */
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 
 const forgotPassword = async (req, res) => {
     try {
+        //initializing the sendgrid API KEY for email communication
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
         const { email } = req.body;
 
         if (!email) {

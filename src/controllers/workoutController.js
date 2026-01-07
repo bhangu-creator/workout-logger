@@ -6,12 +6,14 @@
  * @requires bcrypt
  * @requires jwt
  * @methods createWorkout,getWorkoutById,getAllWorkouts,updateWorkout,deleteWorkoutById
+ * @class  AppError
 */
 
 //Importing required modules and models
 const Workout =require('../models/workout.js');
 const bcrypt= require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const AppError = require("../utils/centeralizedError.js");
 
 /**
  * @desc   Create a new workout.
@@ -20,7 +22,7 @@ const jwt = require("jsonwebtoken");
  * @param  {Object} res - Express response object.
  */
 
-const createWorkout = async (req,res)=>{
+const createWorkout = async (req,res,next)=>{
 
     try{
 
@@ -30,21 +32,9 @@ const createWorkout = async (req,res)=>{
         //extracting attached user's id sent by the middleware
         const userId= req.user.id;
 
-        // //verify the exercise array
-        // if(!Array.isArray(exercises))
-        // {
-        //     return res.status(400).json({error:"Invalid input"})
-        // }
-
-        // //remove garbage values from exercise array if any
-        // const filteredExercises= exercises.filter((ex)=>
-        // {
-        //     ex!=null && typeof ex=="object" && !Array.isArray(ex)
-        // })
-
         //verify if the required details are sent by the user
-        if(!title||!exercises || exercises.length==0){
-            return res.status(400).json({error:"Title or exercises are required"});
+        if(!title||!exercises ||exercises.length===0){
+            throw new AppError(400,"Title or exercises are required");
 
         }
 
@@ -54,28 +44,24 @@ const createWorkout = async (req,res)=>{
 
         if(!newWorkout)
         {
-            return res.status(500).json({error:"Workout could not get created due to server issue"});
+            throw new AppError(500,"Workout could not get created due to server issue");
         }
 
         res.status(201).json({message:"New workout is created successfully",newWorkout}
     );
         }catch(error)
         {
-            if (error.name=="ValidationError")
+            console.error("Error while creating new workout",error);
+            if (error instanceof AppError) {return next(error)}
+            if (error.name==="ValidationError")
             {
                 if (error.errors.type && error.errors.type.kind=="enum")
                 {
-                    return res.status(400).json({
-                        success:false,
-                        message : "Error while creating a new workout",
-                        error: error.message,
-                        note: "Please use only these options for 'type': [strength,Cardio,HIT,yoga,other]"
-                    })
+
+                    return next(new AppError(400,"Error while creating a new workout: Please use only these options for 'type': [strength,Cardio,HIT,yoga,other]"))
                 }
             }
-            console.error("Error while creating new workout",error);
-            res.status(500).json({message:"Error while creating new workout",
-                error: error.message})
+            next(new AppError(500,"Failed to create the workout"));
         };
 };
 
@@ -86,7 +72,7 @@ const createWorkout = async (req,res)=>{
  * @param  {Object} res - Express response object.
  */
 
-const getWorkoutById = async (req,res)=>{
+const getWorkoutById = async (req,res,next)=>{
 
     try{
 
@@ -101,7 +87,7 @@ const getWorkoutById = async (req,res)=>{
 
         if(!workout)
         {
-            return res.status(404).json({message:"Workout not found or unauthorized"});
+            throw new AppError(404,"Workout not found");
         }
 
         res.status(200).json({workout});
@@ -109,8 +95,13 @@ const getWorkoutById = async (req,res)=>{
         }catch(error)
         {
             console.error("Error fetching workout",error);
-            res.status(500).json({message:"Server Error while fetching the workout",
-                error: error.message})
+            //application error
+            if (error instanceof AppError){return next(error);}
+            //invalid id error
+            if (error.name=="castError"){ return next(400,"Invalid WorkoutId");}
+            //server error
+            next(new AppError(500,"Server Error while fetching the workout"));
+
         };
 };
 
@@ -121,7 +112,7 @@ const getWorkoutById = async (req,res)=>{
  * @param  {Object} res - Express response object.
  */
 
-const getAllWorkouts = async (req,res)=>{
+const getAllWorkouts = async (req,res,next)=>{
 
     try{
 
@@ -140,9 +131,8 @@ const getAllWorkouts = async (req,res)=>{
         }catch(error)
         {
             console.error("Error fetching workout",error);
-            res.status(500).json({message:"Server Error while fetching the workout",
-                success:false,
-                error: error.message})
+            if (error instanceof AppError){return next(error);}
+            next(new AppError(500,"Server Error while fetching the workouts"));
         };
 };
 
@@ -154,7 +144,7 @@ const getAllWorkouts = async (req,res)=>{
  * @param  {Object} res - Express response object.
  */
 
-const updateWorkout = async (req,res)=>{
+const updateWorkout = async (req,res,next)=>{
 
     try{
 
@@ -166,12 +156,11 @@ const updateWorkout = async (req,res)=>{
         const {title,type,exercises}=req.body;
 
         //verify if the sent data for update is valid
-        if (!title && !type && (!exercises || exercises.length === 0)) {
-            return res.status(400).json({ message: "No fields provided for update" });
+        if (!title || !type || (!exercises || exercises.length === 0)) {
+            
+            throw new AppError(400,"Required fields are not provided for update");
         }
         
-        //normalize the sent workout Types
-        // const normalizedType = type? type.toLowerCase():  undefined;
         //verify if the workout id exists for the sent user's id and update the workout details
         const updatedWorkout= await Workout.findOneAndUpdate(
             {_id:id,user:userId},  //match workout id with user's id
@@ -181,7 +170,7 @@ const updateWorkout = async (req,res)=>{
 
         if(!updatedWorkout)
         {
-            return res.status(404).json({message:"Workout not found or unauthorized"});
+            throw new AppError(404,"Workout not found");
         }
 
         res.status(200).json({message:"Workout has been updated successfully",updatedWorkout});
@@ -189,8 +178,14 @@ const updateWorkout = async (req,res)=>{
         }catch(error)
         {
             console.error("Error while updating the workout",error);
-            res.status(500).json({message:"Error while updating the workout",
-                error: error.message})
+
+            if (error instanceof AppError){ return next(error);}
+
+            if (error.name==="CastError"){return next(new AppError(400,"Invalid Workout Id"));}
+
+            if (error.name==="ValidationError"){ return next(new AppError(400,"Please verify all required fields are not empty! Also please use only these options for 'type': [strength,Cardio,HIT,yoga,other]"))}
+            
+            next(new AppError(500,"Error while updating the workout"));
         };
 };
 
@@ -201,7 +196,7 @@ const updateWorkout = async (req,res)=>{
  * @param  {Object} res - Express response object.
  */
 
-const deleteWorkoutById = async (req,res)=>{
+const deleteWorkoutById = async (req,res,next)=>{
 
     try{
 
@@ -216,15 +211,20 @@ const deleteWorkoutById = async (req,res)=>{
 
         if(!workout)
         {
-            return res.status(404).json({error:"Workout not found or unauthorized"});
+            throw new AppError(404,"Workout not Found")
         }
 
-        res.status(200).json({message:"Workout has been delete successfully"});
+        res.status(200).json({message:"Workout has been deleted successfully"});
 
         }catch(error)
         {
             console.error("Error deleting the workout",error);
-            res.status(500).json({error:"Server Error while deleting the workout",})
+
+            if (error instanceof AppError){ return next(error)}
+
+            if(error.name==="CastError"){return next(new AppError(400,"Invalid Workout Id"))}
+
+            next(new AppError(500,"Server Error while deleting the workout"))
         };
 };
 

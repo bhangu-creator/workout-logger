@@ -8,6 +8,7 @@
  * @requires bcrypt
  * @requires jwt
  * @methods getWorkoutTypeBreakdown, getWeeklyTrends, getPersonalRecordsStats
+ * @class AppError
 */
 
 /**
@@ -22,8 +23,9 @@ const mongoose = require("mongoose");
 const Workout = require("../models/workout.js");
 const dateQuery = require("../utils/date.js");
 const trendHelp= require("../utils/trendHelper.js");
+const AppError = require("../utils/centeralizedError.js");
 
-const getWorkoutTypeBreakdown = async (req,res) =>
+const getWorkoutTypeBreakdown = async (req,res,next) =>
 {
     try
     {
@@ -67,7 +69,7 @@ const getWorkoutTypeBreakdown = async (req,res) =>
                 endDate.setDate(endDate.getDate()+1);
             }
         else{
-                return res.status(400).json({message : "Provide period or from/to"});
+                throw new AppError(400,"Provide params - period or from/to");
             }
 
         const {ObjectId}= mongoose.Types;
@@ -97,8 +99,12 @@ const getWorkoutTypeBreakdown = async (req,res) =>
         res.json({period:period || "custom",totalWorkouts,totalKcal,breakdown:formatted});
 
 
-    }catch (err) {
-    res.status(500).json({ message: "Error fetching stats", error: err.message });
+    }catch (error) {
+        console.error(error);
+
+        if(error instanceof AppError) { return next(error)}
+
+        next(new AppError(500,"Error fetching stats"));
   }
 
 };
@@ -111,7 +117,7 @@ const getWorkoutTypeBreakdown = async (req,res) =>
  * @param {Object} res -> Express response Object
  */
 
-const getWeeklyTrends = async (req,res) =>
+const getWeeklyTrends = async (req,res,next) =>
 {
     try{
         
@@ -181,7 +187,11 @@ const getWeeklyTrends = async (req,res) =>
 
     }catch(error)
     {
-        return res.status(500).json({message:"Server error while extracting the data",error});
+        console.error(error);
+
+        if (error instanceof AppError){return next(error)}
+
+        next(new AppError(500,"Server error while extracting the data"))
     }
 }
 
@@ -191,7 +201,7 @@ const getWeeklyTrends = async (req,res) =>
  * @param {Object} req -> Express request Object
  * @param {Object} res -> Express response Object
  */
-const getPersonalRecordsStats= async (req,res)=>
+const getPersonalRecordsStats= async (req,res,next)=>
 {
     try{
         
@@ -430,7 +440,7 @@ const getPersonalRecordsStats= async (req,res)=>
 
         //verify if the workout exists
         if (!workoutWithLongestDuration.length || !workoutWithMaxKcalBurned.length || !dates.length ||!milestonesData.length||!daysData.length||!weekData.length) {
-            return res.status(200).json({message: "No workout records found for this user"});
+            throw new AppError(200,"No workout records found for this user");
            }
 
         //making the dates object values unique
@@ -504,7 +514,11 @@ const getPersonalRecordsStats= async (req,res)=>
         });
     }catch(error)
     {
-        return res.status(500).json({error:"Server error while fetching user's Personal Records",error})
+        console.error(error);
+
+        if (error instanceof AppError) { return next(error);}
+    
+        next(500,"Server error while fetching user's Personal Records");
     }
 
 }
