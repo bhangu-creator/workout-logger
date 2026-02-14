@@ -2,7 +2,10 @@
 // Props:
 // - isOpen: boolean that controls whether the drawer is visible
 // - onclose: function to close the drawer (usually sets isOpen to false)
+import { useNavigate } from "react-router-dom";
+
 function StatsDrawer({ onclose, isOpen }) {
+  const navigate = useNavigate(); 
   const DRAWER_CLOSES_MS= 500;
   return (
     <>
@@ -43,7 +46,7 @@ function StatsDrawer({ onclose, isOpen }) {
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
               onclose(); // close the drawer after navigation
-              window.location.href = "/workoutsByType";
+              navigate("/workoutsByType");
             }}
           >
             View Workouts by Type
@@ -54,7 +57,7 @@ function StatsDrawer({ onclose, isOpen }) {
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
               onclose(); // close the drawer after navigation
-              window.location.href = "/workoutsTrends";
+              navigate("/workoutsTrends");
             }}
           >
             View Workouts Trend
@@ -65,7 +68,7 @@ function StatsDrawer({ onclose, isOpen }) {
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
               onclose(); // close the drawer after navigation
-              window.location.href = "/workoutRecords";
+              navigate("/workoutRecords");
             }}
           >
             View Personal Records
