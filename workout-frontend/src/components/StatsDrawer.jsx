@@ -38,34 +38,34 @@ function StatsDrawer({ onclose, isOpen }) {
         */}
         <div className="items-center mt-[200px] divide-y divide-gray-200">
           
-          {/* Navigate to Workouts by Type page in a new tab */}
+          {/* Navigate to Workouts by Type page in the same tab */}
           <div
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
               onclose(); // close the drawer after navigation
-              setTimeout(()=>{window.open("/workoutsByType", "_blank");},DRAWER_CLOSES_MS)
+              window.location.href = "/workoutsByType";
             }}
           >
             View Workouts by Type
           </div>
 
-          {/* Navigate to Workouts Trend page in a new tab */}
+          {/* Navigate to Workouts Trend page in the same tab */}
           <div
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
               onclose(); // close the drawer after navigation
-              setTimeout(()=>{window.open("/workoutsTrends", "_blank");},DRAWER_CLOSES_MS)
+              window.location.href = "/workoutsTrends";
             }}
           >
             View Workouts Trend
           </div>
 
-          {/* Navigate to Personal Records page in a new tab */}
+          {/* Navigate to Personal Records page in the same tab */}
           <div
             className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
             onClick={() => {
               onclose(); // close the drawer after navigation
-              setTimeout(()=>{window.open("/workoutRecords", "_blank");},DRAWER_CLOSES_MS)
+              window.location.href = "/workoutRecords";
             }}
           >
             View Personal Records
