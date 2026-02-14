@@ -57,7 +57,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={140}
+                outerRadius="100%" // Changed to percentage for responsiveness
                 label={({value})=>`${value}%`}
                 >
                     {chartData.map(entry=>(
@@ -76,8 +76,6 @@ function WorkoutTypePie({ breakdownData, loading }) {
             />
             </PieChart>
         </ResponsiveContainer>
-
-
     </div>) 
     }
 }

@@ -97,88 +97,82 @@ function WorkoutsList({ onView, onEdit, searchText, WorkoutsData, onDelete }) {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-
-      {/* Header row with sortable column labels */}
-      <div className="bg-gray-200 rounded-t-lg grid grid-cols-5 font-semibold text-gray-700 px-4 py-3">
-        <div className="cursor-pointer select-none flex items-center gap-1" onClick={() => handleSort("title")}>
-          {sortState.key == "title" && (
-            <span>{sortState.direction == "asc" ? "▲" : "▼"}</span>
-          )}
-          Title
-        </div>
-
-        <div className="cursor-pointer select-none flex items-center gap-1" onClick={() => handleSort("type")}>
-          Type
-          {sortState.key == "type" && (
-            <span>{sortState.direction == "asc" ? "▲" : "▼"}</span>
-          )}
-        </div>
-
-        <div className="cursor-pointer select-none flex items-center gap-1" onClick={() => handleSort("totalDuration")}>
-          {sortState.key == "totalDuration" && (
-            <span>{sortState.direction == "asc" ? "▲" : "▼"}</span>
-          )}
-          Total Duration
-        </div>
-
-        <div className="cursor-pointer select-none flex items-center gap-1" onClick={() => handleSort("totalCalories")}>
-          {sortState.key == "totalCalories" && (
-            <span>{sortState.direction == "asc" ? "▲" : "▼"}</span>
-          )}
-          Total Calories
-        </div>
-
-        <div className="text-center select-none">Actions</div>
+      {/* Horizontal scroll table container */}
+      <div className="overflow-x-auto rounded-lg shadow">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer select-none" onClick={() => handleSort("title")}>
+                <div className="flex items-center gap-1">
+                  Title
+                  {sortState.key === "title" && (
+                    <span>{sortState.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </div>
+              </th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer select-none" onClick={() => handleSort("type")}>
+                <div className="flex items-center gap-1">
+                  Type
+                  {sortState.key === "type" && (
+                    <span>{sortState.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </div>
+              </th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer select-none" onClick={() => handleSort("totalDuration")}>
+                <div className="flex items-center gap-1">
+                  Total Duration
+                  {sortState.key === "totalDuration" && (
+                    <span>{sortState.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </div>
+              </th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer select-none" onClick={() => handleSort("totalCalories")}>
+                <div className="flex items-center gap-1">
+                  Total Calories
+                  {sortState.key === "totalCalories" && (
+                    <span>{sortState.direction === "asc" ? "▲" : "▼"}</span>
+                  )}
+                </div>
+              </th>
+              <th className="px-4 py-3 text-center font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {WorkoutsData.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-4 py-16 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    <p className="text-lg font-medium">No workouts yet</p>
+                    <p className="text-sm mt-2">Start logging workouts to build your history.</p>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              paginationWorkouts.map(w => (
+                <tr key={w._id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-3 font-medium">{w.title}</td>
+                  <td className="px-4 py-3 text-gray-600">{w.type}</td>
+                  <td className="px-4 py-3 text-gray-500">{w.totalDuration} min</td>
+                  <td className="px-4 py-3 text-gray-500">{w.totalCalories} kcal</td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-center gap-2">
+                      <button className="text-gray-500 hover:text-blue-600 transition-all" onClick={() => onView(w)}>
+                        View
+                      </button>
+                      <button className="px-2 py-1 border border-gray-300 rounded text-gray-600 hover:border-orange-500 hover:text-orange-600 transition-all" onClick={() => onEdit(w)}>
+                        Edit
+                      </button>
+                      <button className="px-2 py-1 border border-red-400 rounded text-red-500 hover:bg-red-500 hover:text-white transition-all" onClick={() => onDelete(w._id)}>
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
-
-      {/* Workout list rows */}
-      <ul className="flex flex-col gap-2 mt-2">
-        {WorkoutsData.length == 0 ? (
-          // Empty state when no workouts exist
-          <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-            <p className="text-lg font-medium">No workouts yet</p>
-            <p className="text-sm mt-2">
-              Start logging workouts to build your history.
-            </p>
-          </div>
-        ) : (
-          paginationWorkouts.map(w => (
-            <li
-              key={w._id}
-              className="grid grid-cols-5 gap-6 items-center bg-white px-4 py-3 rounded-lg shadow"
-            >
-              <div className="font-medium">{w.title}</div>
-              <div className="text-gray-600">{w.type}</div>
-              <div className="text-gray-500">{w.totalDuration} min</div>
-              <div className="text-gray-500">{w.totalCalories} kcal</div>
-
-              {/* Action buttons */}
-              <div className="flex justify-end gap-3">
-                <button
-                  className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition-all duration-200 hover:scale-105"
-                  onClick={() => onView(w)}
-                >
-                  View
-                </button>
-
-                <button
-                  className="flex items-center gap-1 px-2 py-1 border border-gray-300 rounded-md text-gray-600 hover:border-orange-500 hover:text-orange-600 hover:bg-orange-50 transition-all duration-200"
-                  onClick={() => onEdit(w)}
-                >
-                  Edit
-                </button>
-
-                <button
-                  className="flex items-center gap-1 px-2 py-1 border border-red-400 rounded-md text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200"
-                  onClick={() => onDelete(w._id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))
-        )}
-      </ul>
 
       {/* Pagination controls */}
       <div className="flex justify-center mt-6 gap-2">
@@ -186,7 +180,7 @@ function WorkoutsList({ onView, onEdit, searchText, WorkoutsData, onDelete }) {
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`px-3 py-1 rounded ${curretPage == page ? "bg-red-500 text-gray" : "bg-gray-500"}`}
+            className={`px-3 py-1 rounded ${curretPage === page ? "bg-red-500 text-white" : "bg-gray-500 text-white"}`}
           >
             {page}
           </button>

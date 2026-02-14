@@ -1,6 +1,9 @@
 // Importing the logo image used in the header
 import logo from "../assets/logo.png";
 
+//importng the validating token method
+import {isTokenValid} from "../utils/authRequest";
+
 // useNavigate is used for programmatic navigation on logo click
 import { useNavigate } from "react-router-dom";
 
@@ -9,8 +12,20 @@ import { useNavigate } from "react-router-dom";
 // - mode: controls positioning and layout ("absolute" or inline layout)
 function LogoHeader({ mode = "absolute" }) {
 
-  // Hook to navigate between routes
   const navigate = useNavigate();
+
+
+  // method to handle the navigation when the logo or header is clicked
+  const handleClick = () => {
+
+    if (isTokenValid()) {
+      // If token is found, navigate to the workouts page
+      navigate("/workouts");      
+      return;
+    }
+    // If token doesn't exist, navigate to the login page 
+    navigate("/login");
+  };
 
   return (
     // Wrapper div
@@ -22,7 +37,7 @@ function LogoHeader({ mode = "absolute" }) {
           ? "absolute top-4 left-4 flex items-center gap-2 hover:cursor-pointer"
           : "w-full flex items-center px-6 py-4 gap-3 hover:cursor-pointer"
       }
-      onClick={() => navigate("/workouts")}
+      onClick={handleClick}
     >
       {/* App logo image */}
       <img

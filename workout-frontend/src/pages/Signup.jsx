@@ -52,123 +52,119 @@ function Signup()
     };
     
     return (
-        
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative px-4 sm:px-0">
 
-             {/* Reusable header logo */}
-            <LogoHeader/>
+            {/* Reusable header logo */}
+            <LogoHeader />
             <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h2 className="text-3xl font-bold mb-6 text-center">
                     Create Account
                 </h2>
 
-                 {/* Form Starts */}
-                 <form
-                  onSubmit={ async (e)=>
-                    {
-                        //prevents the browser to refresh
+                {/* Form Starts */}
+                <form
+                    onSubmit={async (e) => {
+                        // prevents the browser to refresh
                         e.preventDefault();
 
                         // Client-side validation check
-                        const isValid=validateForm();
-                        if(!isValid){return}
+                        const isValid = validateForm();
+                        if (!isValid) { return }
 
                         // Prepare UI before sending API request
                         setLoading(true);
                         setServerMessage("");
-                        try{
+                        try {
                             // Sending Signup POST request
-                            const response = await axios.post(API_BASE_URL+ENDPOINTS.SIGNUP,formData);
-                            
-                            //backend return message
-                            setServerMessage(response.data.message||"Signup Successfull");
+                            const response = await axios.post(API_BASE_URL + ENDPOINTS.SIGNUP, formData);
+
+                            // backend return message
+                            setServerMessage(response.data.message || "Signup Successful");
 
                             // Small delay for smooth UX
-                            await new Promise(res=> setTimeout(res,1000));
+                            await new Promise(res => setTimeout(res, 1000));
 
                             // Redirect user to login
                             navigate("/login")
-                        }catch(error){
+                        } catch (error) {
                             // Display backend error or fallback error
-                            setServerMessage(error.response?.data?.error||"Something went wrong");
-                        } finally{
+                            setServerMessage(error.response?.data?.error || "Something went wrong");
+                        } finally {
                             // Always stop loading spinner
                             setLoading(false);
                         }
-                    }
-                 }
-                 >     
+                    }}
+                >
 
-                    {/*Username*/}
+                    {/* Username */}
                     <label className="block mb-2 font-semibold">Username</label>
                     <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    autoComplete="name"
-                    //
-                    onChange={(e)=> setFormData(prev=>({ ...prev,name:e.target.value}))}
-                    className="w-full p-2 border rounded mb-4"
-                    placeholder="Enter Username"
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        autoComplete="name"
+                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        className="w-full p-2 border rounded mb-4"
+                        placeholder="Enter Username"
                     />
                     {errors.name && (
                         <p className="text-red-500 text-sm mb-2">{errors.name}</p>
                     )}
 
-                    {/*Email*/}
+                    {/* Email */}
                     <label className="block mb-2 font-semibold">
                         Email
                     </label>
                     <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    autoComplete="email"
-                    onChange={(e)=>setFormData(prev=>({...prev,email:e.target.value}))}
-                    className="w-full p-2 border rounded mb-4"
-                    placeholder="Enter Email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        autoComplete="email"
+                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        className="w-full p-2 border rounded mb-4"
+                        placeholder="Enter Email"
                     />
                     {errors.email && (
                         <p className="text-red-500 text-sm mb-2">{errors.email}</p>
                     )}
 
-                    {/*Password*/}
+                    {/* Password */}
                     <label className="block mb-2 font-semibold">
                         Password
                     </label>
                     <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    autoComplete="new-password"
-                    onChange={(e)=>setFormData(prev=>({...prev, password:e.target.value}))}
-                    className="w-full p-2 border rounded mb-4"
-                    placeholder="Enter Password"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        autoComplete="new-password"
+                        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                        className="w-full p-2 border rounded mb-4"
+                        placeholder="Enter Password"
                     />
                     {errors.password && (
                         <p className="text-red-500 text-sm mb-2">{errors.password}</p>
                     )}
 
-                    {/*displays the server response on UI */}
+                    {/* Displays the server response on UI */}
                     {serverMessage && (
-                        <p className={`text-center text-sm mt-2 ${serverMessage.includes("Success")?"text-green-600" : "text-red-500"}`}>{serverMessage}</p>
+                        <p className={`text-center text-sm mt-2 ${serverMessage.includes("Success") ? "text-green-600" : "text-red-500"}`}>{serverMessage}</p>
                     )}
 
-                    {/* login redirect link*/ }
+                    {/* Login redirect link */}
                     <div className="flex justify-between">
                         <p className="text-sm text-center ">Already have an account?
-                            <Link to="/login"  className="text-blue-600 text-sm hover:underline cursor-pointer p-1">Log in</Link>
+                            <Link to="/login" className="text-blue-600 text-sm hover:underline cursor-pointer p-1">Log in</Link>
                         </p>
                     </div>
-                    
-                    {/*Submit Button, button shows loading state while API is running*/}
-                    <button type="Submit" 
-                    className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50"
-                    disabled={loading}
+
+                    {/* Submit Button, button shows loading state while API is running */}
+                    <button type="Submit"
+                        className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50"
+                        disabled={loading}
                     >
-                    {loading ? "Signing up...":"Signup"}                      
-                      </button>
-                 </form>
+                        {loading ? "Signing up..." : "Signup"}
+                    </button>
+                </form>
             </div>
         </div>
     );

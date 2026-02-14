@@ -12,15 +12,15 @@ function DatePicker({ handleCustomDates }) {
 
     return (
         // Container for the date picker inputs
-        <div className="flex items-center gap-4 bg-white p-3 rounded-lg shadow-md border border-gray-300">
+        <div className="flex flex-col sm:flex-row items-center gap-4 bg-white p-3 rounded-lg shadow-md border border-gray-300">
             
             {/* From date input */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
                 <label className="text-gray-700 font-semibold text-sm">From:</label>
                 <input 
                     type="date" 
                     value={selectedDates.from}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm"
+                    className="border border-gray-300 rounded px-2 py-1 text-sm w-full"
                     // Prevent selecting future dates
                     max={new Date().toISOString().split("T")[0]}
                     onChange={(e) => {
@@ -32,12 +32,12 @@ function DatePicker({ handleCustomDates }) {
             </div>
             
             {/* To date input */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
                 <label className="text-gray-700 font-semibold text-sm">To:</label>
                 <input 
                     type="date" 
                     value={selectedDates.to}
-                    className="border border-gray-300 rounded px-2 py-1 text-sm"
+                    className="border border-gray-300 rounded px-2 py-1 text-sm w-full"
                     // Prevent selecting future dates
                     max={new Date().toISOString().split("T")[0]}
                     onChange={(e) => {

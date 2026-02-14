@@ -35,7 +35,7 @@ function ForgotPassword() {
 
     return (
         // Page container with centered form
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative p-4 sm:p-0">
             
             {/* Reusable logo header */}
             <LogoHeader />
@@ -124,7 +124,7 @@ function ForgotPassword() {
                     <button
                         disabled={loading}
                         type="submit"
-                        className="w-40 block mx-auto bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50"
+                        className="w-full sm:w-40 block mx-auto bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50"
                     >
                         {loading ? "Sending Reset Link..." : "Send Link"}
                     </button>

@@ -33,15 +33,15 @@ function WorkoutTrend() {
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center justify-between px-4 py-4 md:px-6">
                 <LogoHeader mode="inline" />
                 <TopRightUser />
             </div>
 
             {/* Main Content */}
-            <div className="max-w-6xl mx-auto px-6 py-8">
-                <div className="bg-white rounded-lg shadow-md p-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            <div className="max-w-6xl mx-auto px-4 py-8 md:px-6">
+                <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
                         Workout Trends
                     </h2>
                     <p className="text-gray-600 mb-6">
@@ -98,7 +98,9 @@ function WorkoutTrend() {
 
                     {/* Chart */}
                     {!loading && !error && data && data.length > 0 && (
-                        <WorkoutsTrendChart weeklyProgress={data} />
+                        <div className="overflow-x-auto">
+                            <WorkoutsTrendChart weeklyProgress={data} />
+                        </div>
                     )}
                 </div>
             </div>

@@ -94,23 +94,23 @@ function WorkoutRecords() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <div className="flex items-center justify-between px-6">
+      <div className="flex items-center justify-between px-4 md:px-6">
         <LogoHeader mode="inline" />
         <TopRightUser />
       </div>
 
-      {/*View Workout Modal **/}
-        {showModal && (
-        <WorkoutViewModal data={modalData} onClose={()=>setShowModal(false)}></WorkoutViewModal>
+      {/* View Workout Modal */}
+      {showModal && (
+        <WorkoutViewModal data={modalData} onClose={() => setShowModal(false)} />
       )}
 
       {/* Page Container */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
+        <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
 
           {/* Title */}
           <div className="flex justify-center mt-4">
-            <h2 className="text-4xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
               Personal Records
             </h2>
           </div>
@@ -120,15 +120,15 @@ function WorkoutRecords() {
             Workout Achievements
           </div>
 
-          <div className="flex justify-center gap-12 mt-12">
+          <div className="flex flex-col md:flex-row justify-center gap-4 mt-12">
             {/* Max Duration */}
-            <div className="bg-gray-100 min-h-[250px] min-w-[300px] rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]"
-            onClick={()=>openWorkoutModal(durationWorkout)}>
+            <div className="bg-gray-100 min-h-[250px] flex-1 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]"
+              onClick={() => openWorkoutModal(durationWorkout)}>
               <div className="flex flex-col">
                 <div className="text-lg font-semibold text-center mt-6">
                   Max Duration of Workout
                 </div>
-                <div className="text-5xl font-semibold text-center mt-6 text-red-500">
+                <div className="text-4xl md:text-5xl font-semibold text-center mt-6 text-red-500">
                   {allDurationsFormatted.maxDuration}
                 </div>
                 <div className="text-sm text-gray-500 text-center mt-6 hover:text-gray-800">
@@ -138,13 +138,13 @@ function WorkoutRecords() {
             </div>
 
             {/* Max Calories */}
-            <div className="bg-gray-100 min-h-[250px] min-w-[300px] rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]"
-            onClick={()=>openWorkoutModal(caloriesWorkout)}>
+            <div className="bg-gray-100 min-h-[250px] flex-1 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]"
+              onClick={() => openWorkoutModal(caloriesWorkout)}>
               <div className="flex flex-col">
                 <div className="text-lg font-semibold text-center mt-6">
                   Max Calories Burned in Workout
                 </div>
-                <div className="text-5xl font-semibold text-center mt-6 text-red-500">
+                <div className="text-4xl md:text-5xl font-semibold text-center mt-6 text-red-500">
                   {achievementsData?.calories?.kcalRecord ?? 0} kcal
                 </div>
                 <div className="text-sm text-gray-500 text-center mt-6 hover:text-gray-800">
@@ -159,24 +159,24 @@ function WorkoutRecords() {
             Streaks
           </div>
 
-          <div className="flex justify-center gap-12 mt-12">
-            <div className="bg-gray-100 min-h-[250px] min-w-[300px] rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
+          <div className="flex flex-col md:flex-row justify-center gap-4 mt-12">
+            <div className="bg-gray-100 min-h-[250px] flex-1 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
               <div className="flex flex-col">
                 <div className="text-lg font-semibold text-center mt-6">
                   Current Streak
                 </div>
-                <div className="text-5xl font-semibold text-center mt-6 text-red-500">
+                <div className="text-4xl md:text-5xl font-semibold text-center mt-6 text-red-500">
                   {achievementsData?.streaks?.current ?? 0} days
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-100 min-h-[250px] min-w-[300px] rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
+            <div className="bg-gray-100 min-h-[250px] flex-1 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
               <div className="flex flex-col">
                 <div className="text-lg font-semibold text-center mt-6">
                   Longest Streak
                 </div>
-                <div className="text-5xl font-semibold text-center mt-6 text-red-500">
+                <div className="text-4xl md:text-5xl font-semibold text-center mt-6 text-red-500">
                   {achievementsData?.streaks?.longest ?? 0} days
                 </div>
               </div>
@@ -190,15 +190,15 @@ function WorkoutRecords() {
 
           <div className="flex flex-wrap gap-4 mt-8">
             {[
-              ["Total Workouts Logged",milestonesData[0]?.totalWorkouts ?? 0],
+              ["Total Workouts Logged", milestonesData[0]?.totalWorkouts ?? 0],
               ["Total Calories Burned", milestonesData[0]?.totalKcalBurned ?? 0],
-              ["Total Duration",allDurationsFormatted.totalDuration],
+              ["Total Duration", allDurationsFormatted.totalDuration],
               ["Average Duration", allDurationsFormatted.averageDuration],
               ["Average Calories Burned", milestonesData[0]?.avgKcalBurned ?? 0],
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="bg-gray-100 px-4 py-3 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]"
+                className="bg-gray-100 px-4 py-3 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98] flex-1"
               >
                 <div className="flex gap-2">
                   <div className="font-semibold text-gray-700">{label}:</div>
@@ -213,16 +213,16 @@ function WorkoutRecords() {
             Records
           </div>
 
-          <div className="flex justify-center gap-12 mt-12">
+          <div className="flex flex-col md:flex-row justify-center gap-4 mt-12">
             {/* Most Active Day */}
-            <div className="bg-gray-100 min-h-[260px] min-w-[320px] rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
+            <div className="bg-gray-100 min-h-[260px] flex-1 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
               <div className="flex flex-col">
                 <div className="text-xl font-semibold text-center mt-6">
                   Most Active Day
                 </div>
 
                 {[
-                  ["Date", activeDayStrs?? "----"],
+                  ["Date", activeDayStrs ?? "----"],
                   ["Exercises Logged", recordsData?.mostActiveDay[0]?.workouts ?? 0],
                   ["Total Calories", recordsData?.mostActiveDay[0]?.totalKcalBurned ?? 0],
                   ["Total Duration", allDurationsFormatted.activeDayDuration],
@@ -236,14 +236,14 @@ function WorkoutRecords() {
             </div>
 
             {/* Most Active Week */}
-            <div className="bg-gray-100 min-h-[260px] min-w-[320px] rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
+            <div className="bg-gray-100 min-h-[260px] flex-1 rounded-xl cursor-pointer transition-all duration-150 hover:shadow-lg active:scale-[0.98]">
               <div className="flex flex-col">
                 <div className="text-xl font-semibold text-center mt-6">
                   Most Active Week
                 </div>
 
                 {[
-                  ["Week", recordsData?.mostActiveWeek[0]?.week ?? "----" ],
+                  ["Week", recordsData?.mostActiveWeek[0]?.week ?? "----"],
                   ["Exercises Logged", recordsData?.mostActiveWeek[0]?.workouts ?? 0],
                   ["Total Calories", recordsData?.mostActiveWeek[0]?.totalKcalBurned ?? 0],
                   ["Total Duration", allDurationsFormatted.activeWeekDuration],

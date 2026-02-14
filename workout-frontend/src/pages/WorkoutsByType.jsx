@@ -79,27 +79,29 @@ function WorkoutsByType() {
             {/* Header */}
             <div className="flex items-center justify-between px-6">
                 <LogoHeader mode="inline" />
-                <TopRightUser />
+                <div className="ml-4"> {/* Increased margin for spacing */}
+                    <TopRightUser />
+                </div>
             </div>
 
             {/* Main Block */}
-            <div className="bg-gray-300 max-w-8xl mx-auto min-h-[500px] ml-[50px] mt-[20px] mr-[50px] border border-gray-300 rounded-lg p-6">
-                <h2 className="w-full text-center text-red-500 text-[25px] font-semibold">
+            <div className="bg-gray-300 max-w-8xl mx-auto min-h-[600px] ml-[50px] mt-[20px] mr-[50px] border border-gray-300 rounded-lg p-6 md:ml-[20px] md:mr-[20px] sm:ml-[10px] sm:mr-[10px]">
+                <h2 className="w-full text-center text-red-500 text-[25px] font-semibold md:text-[20px] sm:text-[18px]">
                     Workouts By Type
                 </h2>
-                <div className="mt-4 font-semibold text-[20px]">
+                <div className="mt-4 font-semibold text-[20px] md:text-[16px] sm:text-[14px]">
                     <p>See how your Workouts are split by Type over Time</p>
                 </div>
 
-                {/* Main Flex Container - LEFT and RIGHT */}
-                <div className="flex gap-8 items-start mt-6">
+                {/* Main Flex Container - Stacked on mobile */}
+                <div className="flex flex-col lg:flex-row gap-8 items-start mt-6">
                     
                     {/* ===== LEFT SIDE: Controls ===== */}
-                    <div className="flex-shrink-0 w-[500px]">
-                        <p className="text-[16px] font-semibold">Select Duration:</p>
+                    <div className="flex-shrink-0 w-full lg:w-[500px]">
+                        <p className="text-[16px] font-semibold md:text-[14px]">Select Duration:</p>
 
                         {/* Radio Buttons */}
-                        <div className="space-y-8 mt-4 pl-6">
+                        <div className="space-y-8 mt-4 pl-6 md:space-y-4">
                             {/* This Week */}
                             <div className="flex items-center gap-2">
                                 <label className="flex items-center gap-2 cursor-pointer">
@@ -116,7 +118,7 @@ function WorkoutsByType() {
                                             setLoading(true);
                                         }}
                                     />
-                                    <span className="font-semibold text-gray-700">This Week</span>
+                                    <span className="font-semibold text-gray-700 md:text-[14px]">This Week</span>
                                 </label>
                             </div>
 
@@ -136,7 +138,7 @@ function WorkoutsByType() {
                                             setLoading(true);
                                         }}
                                     />
-                                    <span className="font-semibold text-gray-700">This Month</span>
+                                    <span className="font-semibold text-gray-700 md:text-[14px]">This Month</span>
                                 </label>
                             </div>
 
@@ -156,12 +158,12 @@ function WorkoutsByType() {
                                             setLoading(true);
                                         }}
                                     />
-                                    <span className="font-semibold text-gray-700">Last Month</span>
+                                    <span className="font-semibold text-gray-700 md:text-[14px]">Last Month</span>
                                 </label>
                             </div>
 
                             {/* Custom Date */}
-                            <div className="flex items-center gap-2 relative">
+                            <div className="flex flex-col items-start gap-2 relative">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
                                         type="radio"
@@ -170,16 +172,16 @@ function WorkoutsByType() {
                                         checked={period === "custom"}
                                         onChange={() => {
                                             setPeriod("custom");
-                                            setShowDatePicker(true)
+                                            setShowDatePicker(true);
                                             setLoading(true);
                                         }}
                                     />
-                                    <span className="font-semibold text-gray-700">Custom Date</span>
+                                    <span className="font-semibold text-gray-700 md:text-[14px]">Custom Date</span>
                                 </label>
 
-                                {/* Date Picker - Absolute positioned */}
+                                {/* Date Picker - Positioned relative to parent */}
                                 {showDatePicker && (
-                                    <div className="absolute left-32 ml-4 top-0">
+                                    <div className="w-full lg:absolute lg:left-32 lg:ml-4 lg:top-0 lg:w-[360px] sm:w-[250px]">
                                         <DatePicker handleCustomDates={handleCustomDates} />
                                         {customDateErrors && (
                                             <p className="mt-2 text-sm text-red-500">
@@ -195,7 +197,7 @@ function WorkoutsByType() {
                         <div className="mt-8 pl-6">
                             <button
                                 type="button"
-                                className="px-6 py-2 bg-red-500 border rounded-lg text-lg text-white font-medium hover:bg-red-700 transition-colors"
+                                className="px-6 py-2 bg-red-500 border rounded-lg text-lg text-white font-medium hover:bg-red-700 transition-colors md:text-[16px] md:px-4 md:py-2"
                                 onClick={handleViewData}
                             >
                                 View Data
@@ -210,29 +212,29 @@ function WorkoutsByType() {
                         </div>
                     </div>
 
-                    {/* ===== RIGHT SIDE: Pie Chart ===== */}
-                    <div className="w-[700px] min-h-[400px] flex items-center justify-center bg-white rounded-lg shadow-md p-6">
+                    {/* ===== RIGHT SIDE: Pie Chart - Increased size for mobile ===== */}
+                    <div className="w-full lg:w-[700px] min-h-[500px] flex items-center justify-center bg-white rounded-lg shadow-md p-6">
                         {/*Showing the overall workouts data  */}
-                        <div>
+                        <div className="w-full">
                             {breakdownData && !(loading) && (
-                                <div className="flex justify-center gap-8">
+                                <div className="flex flex-col md:flex-row justify-center gap-8 mb-6 md:gap-4">
                                     <div className="bg-gray-100 px-6 py-3 rounded-lg text-center">
-                                        <p className="text-sm text-gray-500">Total Workouts</p>
-                                        <p className="text-xl font-bold">{breakdownData.totalWorkouts}</p>
+                                        <p className="text-sm text-gray-500 md:text-xs">Total Workouts</p>
+                                        <p className="text-xl font-bold md:text-lg">{breakdownData.totalWorkouts}</p>
                                     </div>
 
                                     <div className="bg-gray-100 px-6 py-3 rounded-lg text-center">
-                                        <p className="text-sm text-gray-500">Total Kcal</p>
-                                        <p className="text-xl font-bold">{breakdownData.totalKcal}</p>
+                                        <p className="text-sm text-gray-500 md:text-xs">Total Kcal</p>
+                                        <p className="text-xl font-bold md:text-lg">{breakdownData.totalKcal}</p>
                                     </div>
                                 </div>
-                                )}
-                        </div>
+                            )}
 
-                        <WorkoutTypePie
-                            breakdownData={breakdownData}
-                            loading={loading}
-                        />
+                            <WorkoutTypePie
+                                breakdownData={breakdownData}
+                                loading={loading}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -49,11 +49,11 @@ const validateFormDate = ()=>
 
     return (
 
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative px-4">
              {/* Reusable header logo */}
             <LogoHeader mode="absolute"/>
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h2 className="text-3xl font-bold mb-6 text-center"> Log In </h2>
+            <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center"> Log In </h2>
             {/*Form starts*/}
             <form onSubmit={ async (e)=>
                 {
@@ -92,41 +92,41 @@ const validateFormDate = ()=>
                 }
             } >
                 {/*Email field */}
-                <label className="block mb-2 font-semibold">
+                <label className="block mb-2 font-semibold text-sm sm:text-base">
                     Enter Email
                 </label>
-                <input type="email" value={formData.email} name="email" autoComplete="email" className="w-full p-2 border rounded mb-4" placeholder="Enter Email"
+                <input type="email" value={formData.email} name="email" autoComplete="email" className="w-full p-2 border rounded mb-4 text-sm sm:text-base" placeholder="Enter Email"
                  onChange={(e)=> setFormData(prev=>({...prev , email: e.target.value}))
                  }/>
                  {errors.email && (
-                    <p className="text-red-500 text-sm mb-2">{errors.email}</p>
+                    <p className="text-red-500 text-xs sm:text-sm mb-2">{errors.email}</p>
                  )}
                 {/*Password field*/}
-                <label className="block mb-2 font-semibold">
+                <label className="block mb-2 font-semibold text-sm sm:text-base">
                     Enter Password
                 </label>
-                <input type="password" value={formData.password} name="password" autoComplete="password" placeholder="Enter Password" className="w-full p-2 border rounded mb-4"
+                <input type="password" value={formData.password} name="password" autoComplete="password" placeholder="Enter Password" className="w-full p-2 border rounded mb-4 text-sm sm:text-base"
                 onChange={(e)=>setFormData(prev=>({...prev , password:e.target.value}))}/>
-                {errors.password && (<p className="text-red-500 text-sm mb-2">{errors.password}</p>)}
+                {errors.password && (<p className="text-red-500 text-xs sm:text-sm mb-2">{errors.password}</p>)}
 
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-0">
 
                 {/* forgot password link*/ }
-                <Link to="/forgotpassword"  className="text-blue-600 text-sm hover:underline cursor-pointer">Forgot password</Link>
+                <Link to="/forgotpassword"  className="text-blue-600 text-xs sm:text-sm hover:underline cursor-pointer">Forgot password</Link>
 
                   {/* Signup redirect link*/ }
-                <p className="text-sm text-center ">Don't have an account?
-                    <Link to="/signup"  className="text-blue-600 text-sm hover:underline cursor-pointer p-1">Sign up</Link>
+                <p className="text-xs sm:text-sm text-center sm:text-right">Don't have an account?
+                    <Link to="/signup"  className="text-blue-600 text-xs sm:text-sm hover:underline cursor-pointer p-1">Sign up</Link>
                 </p>
                 </div>
 
                 {/*Submit Button*/}
                 {!serverMessage.toLowerCase().includes("success") &&
                 (
-                   <p className="text-center text-sm mt-2 text-red-500">{serverMessage}</p>
+                   <p className="text-center text-xs sm:text-sm mt-2 text-red-500">{serverMessage}</p>
                 )
                 }
-                <button type="submit" disabled={loading} className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50">
+                <button type="submit" disabled={loading} className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50 text-sm sm:text-base">
                     {loading? "Logging In...":"Log In"}
                 </button>
             </form>
