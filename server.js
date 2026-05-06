@@ -11,10 +11,14 @@ const cors = require("cors");
 const authUserRoutes = require("./src/routes/authUsersRoutes.js");
 const workoutController = require("./src/routes/workoutRoute.js");
 const workoutStatsRoutes = require("./src/routes/workoutStatsRoutes.js");
+const cookieParser = require("cookie-parser");
 
+//cookie parser
+const cookieParser = require("cookie-parser")
 dotenv.config();
 
 const app = express();
+app.use(cookieParser());
 
 // Middleware
 app.use(express.json());

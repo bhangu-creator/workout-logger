@@ -17,26 +17,17 @@ const jwt = require('jsonwebtoken');
 
 const authMiddleware = async (req, res, next) => {
     try {
-
-        //extracts token from header 
-        const authHeader=req.headers.authorization;
+        //extracts token from cookies 
+        const accessToken = req.cookies.accessToken;
 
         //checks if token exist
-        if((!authHeader || !authHeader.startsWith("Bearer ")))
+        if((!accessToken))
         {
-            return res.status(401).json({error:"Access Denied. No token provided"});
+            return res.status(401).json({error:"Access Denied. Access Token not provided"})
         }
 
-        //extracts actual token
-        const token= authHeader.split(' ')[1];
-        
-        //verify the token format
-        if(!token){
-            return req.status(400).json({error:"Access Denied. Invalid token format"});
-        }
-
-        //verify the token using JWT secret
-        const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        //verify the access token using JWT secret
+        const decoded = jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET)
 
         //attach user info to req object
         req.user=decoded;

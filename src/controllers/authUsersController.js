@@ -106,16 +106,41 @@ const login = async (req,res,next)=>{
 
         }
 
-        //Generate a JWT token
-        const token= jwt.sign(
-            {id: user._id,email:user.email,username:user.name},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN}
+        //Generate an access JWT token
+        const accesToken= jwt.sign(
+            {id: user._id},process.env.ACCESS_TOKEN_SECRET,{expiresIn:process.env.ACCESS_TOKEN_EXPIRES_IN}
         );
+
+        //Generate a refresh JWT token
+        const refreshToken= jwt.sign(
+            {id: user._id},process.env.REFRESH_TOKEN_SECRET,{expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN}
+        );
+
+        //set acces token cookie
+        res.cookie('accessToken',accessToken,{
+            httpOnly : true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite :"strict",
+            maxAge : 15 * 60 * 1000
+        })
+
+        //set refresh token cookie
+        res.cookie('refreshToken',refreshToken,{
+            httpOnly : true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite : "strict",
+            maxAge : 7* 24 * 60 * 60 * 1000
+        })
+
+        //save refresh token in db
+        user.refreshToken=refreshToken;
+        await user.save();
+
         
         //send success response
         res.status(200).json({
             message:"Login Successful",
             user : {id:user._id,name:user.name,email:user.email},
-            token
         });
     }catch(error){
         console.error("Login Error",error);
@@ -266,5 +291,103 @@ const resetPassword = async (req,res)=>
         }
 };
 
+/**
+ * @desc   Generate a new Access Token 
+ * @access Public
+ * @param  {Object} req - Express request object containing user data.
+ * @param  {Object} res - Express response object.
+ */
+
+const refreshAccessToken = async (req,res)=>
+{
+    try{
+
+        //extract the refresh Token
+        const refreshToken = req.cookies.refreshToken;
+
+        //verify if the token exists
+        if(!refreshToken){
+            return res.status(401).json({error:"No refresh token is available"});
+        }
+
+        //validate the refresh Token
+        const refreshTokenDecode = jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET);
+
+        //validate the refresh token in db 
+        const user = await User.findById(refreshTokenDecode.id);
+        if(!user || user.refreshToken!==refreshToken)
+        {
+            return res.status(403).json({error:"Invalid Refresh Token"})
+        }
+
+        //Generate an access JWT token
+        const accessToken= jwt.sign(
+            {id: refreshTokenDecode.id},process.env.ACCESS_TOKEN_SECRET,{expiresIn:process.env.ACCESS_TOKEN_EXPIRES_IN}
+        );
+
+        //set access token cookie
+        res.cookie('accessToken',accessToken,{
+            httpOnly : true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite : "strict",
+            maxAge : 15 * 60 * 1000
+        })
+
+        //send the OK response
+        return res.status(200).json({message:"Access Token Generated Successfully"})
+
+    }catch(err)
+    {
+        return res.status(403).json({error:"Refresh token expired or invalid"})
+
+    }
+}
+
+/**
+ * @desc   Logout the User
+ * @access Public
+ * @param  {Object} req - Express request object containing user data.
+ * @param  {Object} res - Express response object.
+ */
+
+const logout = async (req,res)=>
+{
+    try{
+        //extract the refresh token
+        const refreshToken= req.cookies.refreshToken;
+
+        //verify if refresh token exists
+        if(!refreshToken){
+            return res.status(200).json({ message: "Already logged out" });
+        }
+
+        //decode the refresh the token
+        const refreshTokenDecode=jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET);
+        const user = await User.findById(refreshTokenDecode.id);
+        if(user)
+        {
+            user.refreshToken=null;
+            await user.save();
+        }
+    
+        //clear the cookies
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+
+        //send the Ok response
+        res.status(200).json({message:"Logout Successful"});
+
+
+
+    }catch(err)
+    {
+        res.status(500).json({error:"Something went wrong"})
+
+    }
+}
+
+
+
+
 //export the modules
-module.exports={signup,login,forgotPassword,resetPassword};
+module.exports={signup,login,forgotPassword,resetPassword,refreshAccessToken,logout};

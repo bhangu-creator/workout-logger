@@ -30,5 +30,15 @@ router.post("/forgotpassword",forgotPassword);
 // @desc   to be used to reset the user's password
 router.post('/reset-password/:token', resetPassword)
 
+//@route POST /api/auth/refresh
+// @desc to generate the new access token
+router.post('/refresh',refreshAccessToken);
+
+//@route POST /api/auth/logout
+// @desc to logout the user
+router.post('/logout',logout);
+
+
+
 //export the router to be used in other files
 module.exports=router;
