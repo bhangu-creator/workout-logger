@@ -1,0 +1,61 @@
+//Import Playwright Modules
+import {test,expect} from "@playwright/test";
+import { SignupPage } from "../../pages/signupPage";
+import { uiText } from "../../constants/uiText";
+
+
+//defining the hooks for test file
+test.beforeEach('Go to Base Url before each Test',async({page})=>
+{
+    await page.goto('/signup');
+})
+
+//creating suite for the Signup Page UI test cases
+test.describe('Signup Page UI Test Cases',()=>
+{
+    test('To verify if all signup page UI elements are displayed correctly',async({page})=>
+    {
+        //creating the signup page object
+        const signupPage=new SignupPage(page);
+
+        //adding assertions for app logo
+        await expect(signupPage.logoImg).toBeVisible();
+        await expect(signupPage.logoName).toHaveText(uiText.signupPage.logoText);
+
+        //adding assertion for form heading
+        await expect(signupPage.formHeading).toBeVisible();
+        await expect(signupPage.formHeading).toHaveText(uiText.signupPage.formheading);
+
+        //assertion for form username label and input
+        await expect(signupPage.userNameLabel).toBeVisible();
+        await expect(signupPage.userNameLabel).toHaveText(uiText.signupPage.usernameLabel);
+        await expect(signupPage.userNameInput).toBeVisible();
+        await expect(signupPage.userNameInput).toHaveAttribute('placeholder',uiText.signupPage.usernamePlaceholder)
+
+        //assertion for form email label and input
+        await expect(signupPage.emailLabel).toBeVisible();
+        await expect(signupPage.emailLabel).toHaveText(uiText.signupPage.emailLabel);
+        await expect(signupPage.emailInput).toBeVisible();
+        await expect(signupPage.emailInput).toHaveAttribute('placeholder',uiText.signupPage.emailPlaceholder)
+
+        //assertion for form password label and input
+        await expect(signupPage.passwordLabel).toBeVisible();
+        await expect(signupPage.passwordLabel).toHaveText(uiText.signupPage.passwordLabel);
+        await expect(signupPage.passwordInput).toBeVisible();
+        await expect(signupPage.passwordInput).toHaveAttribute('placeholder',uiText.signupPage.passwordPlaceholder);
+        await expect(signupPage.passwordInput).toHaveAttribute('type','password');
+
+        //assertion for the login link and login link text
+        await expect(signupPage.logInLinkText).toBeVisible();
+        await expect(signupPage.logInLinkText).toHaveText(uiText.signupPage.logInText);
+        await expect(signupPage.logInLink).toBeVisible();
+
+        //assertion for the signup button
+        await expect(signupPage.signupButton).toBeVisible();
+        await expect(signupPage.signupButton).toHaveAttribute('type','Submit');
+        await expect(signupPage.signupButton).toHaveText(uiText.signupPage.signupButtonText);
+        await expect(signupPage.signupButton).toBeEnabled();
+
+    })
+})
+
