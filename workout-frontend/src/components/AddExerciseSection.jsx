@@ -149,6 +149,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                         <input
                             value={formData.kcalBurned}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
+                            placeholder="in kcal"
                             onChange={(e)=>{setFormData(prev=>({...prev , kcalBurned:e.target.value}));
                                     const calories="calories"
                                      if(errors[calories])
