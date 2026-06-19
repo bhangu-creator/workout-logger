@@ -2,6 +2,8 @@
 import {test,expect} from "@playwright/test";
 import { SignupPage } from "../../pages/signupPage";
 import { uiText } from "../../constants/uiText";
+import { LoginPage } from "../../pages/loginPage";
+import { Workouts } from "../../pages/workoutsPage";
 
 
 //defining the hooks for test file
@@ -13,7 +15,7 @@ test.beforeEach('Go to Base Url before each Test',async({page})=>
 //creating suite for the Signup Page UI test cases
 test.describe('Signup Page UI Test Cases',()=>
 {
-    test('To verify if all signup page UI elements are displayed correctly',async({page})=>
+    test('To verify if all -+ page UI elements are displayed correctly',async({page})=>
     {
         //creating the signup page object
         const signupPage=new SignupPage(page);
@@ -57,5 +59,55 @@ test.describe('Signup Page UI Test Cases',()=>
         await expect(signupPage.signupButton).toBeEnabled();
 
     })
+})
+
+test.describe('Signup Validation Tests',()=>
+{
+    test('To Verify if a new user is registered successfully',async({page})=>
+    {
+        const signupPage= new SignupPage(page);
+        const loginpage= new LoginPage(page);
+
+        const username=`${process.env.TEST_VALID_USERNAME}`;
+        const email=`user${Date.now()}@test.com`;
+        const password=`${process.env.TEST_USER_PASSWORD}`;
+        
+        await signupPage.signup(username,email,password);
+        await loginpage.verifyLoaded();
+
+    })
+
+    test('To Verify if already existed user should not get registered again',async({page})=>
+    {
+        const signupPage= new SignupPage(page);
+
+        const username=`${process.env.TEST_VALID_USERNAME}`;
+        const email=`${process.env.TEST_USER_EMAIL}`;
+        const password=`${process.env.TEST_USER_PASSWORD}`;
+        
+        await signupPage.signup(username,email,password);
+        await expect(signupPage.userExistsError).toBeVisible();
+        await expect(signupPage.userExistsError).toHaveText("User already exists");
+
+    })
+
+    test('To Verify e2e workflow to register new user and login successfully',async({page})=>
+    {
+        const signupPage= new SignupPage(page);
+        const loginpage= new LoginPage(page);
+        const workout = new Workouts(page);
+
+        const username=`${process.env.TEST_VALID_USERNAME}`;
+        const email=`user${Date.now()}@test.com`;
+        const password=`${process.env.TEST_USER_PASSWORD}`;
+        
+        await signupPage.signup(username,email,password);
+        await loginpage.verifyLoaded();
+        await loginpage.login(email,password);
+        await workout.verifyLoaded();
+
+    })
+
+    
 })
 

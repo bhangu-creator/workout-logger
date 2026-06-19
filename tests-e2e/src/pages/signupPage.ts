@@ -20,6 +20,7 @@ export class SignupPage {
     readonly logInLink : Locator;
     readonly signupButton : Locator;
     readonly logInLinkText: Locator;
+    readonly userExistsError : Locator;
 
 
     //define constructor 
@@ -40,8 +41,20 @@ export class SignupPage {
         this.logInLink=this.page.getByRole('link',{name:'Log in'});
         this.logInLinkText=this.page.getByText("Already have an account?");
         this.signupButton = this.page.getByRole('button',{name:'Signup'});
+        this.userExistsError= this.page.getByText("User already exists");
 
     }
+    
+    async signup(username:string, email:string, password: string)
+    {
+        await this.userNameInput.fill(username);
+        await this.emailInput.fill(email);
+        await this.passwordInput.fill(password);
+        console.log("here",username,email,password)
+        await this.signupButton.click();
+    }
+
+
 
 }
 
