@@ -28,6 +28,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                 <div className="flex-1 flex justify-end">
                     {!isView && (
                         <button
+                            data-testid="add-exercise-button"
                             type="button"
                             className="px-3 py-1.5 bg-red-500 text-white text-sm rounded-md 
                              hover:bg-red-600 transition shadow-sm"
@@ -54,6 +55,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
             {exercises.map((ex, indx) => (
                 <div
                     key={indx}
+                    data-testid={`exercise-row-${indx}`}
                     className="border border-gray-300 rounded-lg pt-8 px-4 p-4 shadow-sm bg-white relative"
                 >
                     {/* Delete button for an exercise (hidden in view mode) */}
@@ -71,6 +73,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Name</label>
                         <input
+                            data-testid="exercise-name"
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             value={ex.name || ""}
                             disabled={isView}
@@ -89,6 +92,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Sets</label>
                         <input
+                            data-testid="exercise-sets"
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             value={ex.sets || ""}
                             disabled={isView}
@@ -107,6 +111,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Reps</label>
                         <input
+                            data-testid="exercise-reps"
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             value={ex.reps || ""}
                             disabled={isView}
@@ -125,6 +130,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Weight</label>
                         <input
+                            data-testid="exercise-weight"
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             value={ex.weight || ""}
                             disabled={isView}
@@ -143,6 +149,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Duration</label>
                         <input
+                            data-testid="exercise-duration"
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             value={ex.duration || ""}
                             disabled={isView}
@@ -161,6 +168,7 @@ function ExerciseSection({ mode, exercises, onAddExercise, onEditExercise, onDel
                     <div className="flex items-center gap-3">
                         <label className="w-32 text-gray-700 font-semibold">Calories</label>
                         <input
+                            data-testid="exercise-calories"
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             value={ex.kcalBurned || ""}
                             disabled={isView}

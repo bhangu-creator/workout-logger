@@ -50,6 +50,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Name</label>
                         <input
+                            data-testid="add-exercise-name"
                             value={formData.name}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             onChange={(e)=>{setFormData(prev=>({...prev , name:e.target.value})); 
@@ -69,6 +70,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Sets</label>
                         <input
+                            data-testid="add-exercise-sets"
                             value={formData.sets}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             onChange={(e)=>{setFormData(prev=>({...prev , sets:e.target.value}));
@@ -88,6 +90,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Reps</label>
                         <input
+                            data-testid="add-exercise-reps"
                             value={formData.reps}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             onChange={(e)=>{setFormData(prev=>({...prev , reps:e.target.value}));
@@ -107,6 +110,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Weight</label>
                         <input
+                            data-testid="add-exercise-weight"
                             value={formData.weight}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             placeholder="in kgs"
@@ -127,6 +131,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                     <div className="flex items-center gap-3 mb-3">
                         <label className="w-32 text-gray-700 font-semibold">Duration</label>
                         <input
+                            data-testid="add-exercise-duration"
                             value={formData.duration}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             placeholder="in minutes"
@@ -147,6 +152,7 @@ function AddExerciseSection({resetForm,onAddExercise})
                     <div className="flex items-center gap-3">
                         <label className="w-32 text-gray-700 font-semibold">Calories</label>
                         <input
+                            data-testid="add-exercise-calories"
                             value={formData.kcalBurned}
                             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                             placeholder="in kcal"
@@ -165,16 +171,17 @@ function AddExerciseSection({resetForm,onAddExercise})
                         )}  
 
                     <div className="flex justify-center gap-10 mt-5 ">
-                        <button type="button" className="px-1 py-1 bg-gray-500 rounded-lg text-white hover:bg-gray-600" onClick={handleClear}>Clear Feilds</button>
-                        <button type="button" className="px-1 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600" 
+                        <button data-testid="clear-exercise-button" type="button" className="px-1 py-1 bg-gray-500 rounded-lg text-white hover:bg-gray-600" onClick={handleClear}>Clear Feilds</button>
+                        <button data-testid="log-exercise-button" type="button" className="px-1 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600" 
                         onClick={()=>
                         {
                             if(!validateForm()) return
                             onAddExercise(formData);
                             resetForm();
                         }
+                        
                         }>Log Exercise</button>
-                        <button type="button" className="px-1 py-1 bg-gray-500 rounded-lg text-white hover:bg-gray-600" onClick={resetForm}>Close</button>
+                        <button data-testid="close-exercise-button" type="button" className="px-1 py-1 bg-gray-500 rounded-lg text-white hover:bg-gray-600" onClick={resetForm}>Close</button>
                     </div>
                 </div>
         </div>
