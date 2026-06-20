@@ -168,6 +168,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                         <div className="flex items-center gap-3">
                             <label className="w-40 text-gray-700 font-semibold">Workout Title</label>
                             <input
+                                data-testid="workout-title"
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                                 value={title}
                                 disabled={isView}
@@ -183,6 +184,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                         <div className="flex items-center gap-3">
                             <label className="w-40 text-gray-700 font-semibold">Workout Type</label>
                             <select
+                                data-testid="workout-type"
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                                 value={type}
                                 disabled={isView}
@@ -236,7 +238,8 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                     <div className="flex justify-center mt-8">
                         {!isView && (
                             <button
-                                type="submit"
+                                data-testid="submit"
+                                type="workout-button"
                                 className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
                             >
                                 {isEdit ? "Update Workout" : "Log Workout"}
@@ -246,6 +249,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
 
                     {/* Close modal button */}
                     <button
+                        data-testid="close-modal"
                         onClick={onClose}
                         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
                     >
