@@ -20,8 +20,8 @@ test.describe('workout crud tests',()=>
 
         await workout.createWorkout(validWorkout.workoutTitle,validWorkout.workoutType,validChestWorkoutExercises);
         await workout.LogWorkoutButton.click();
-
-
+        await workout.workoutOkModalButton.click();
+        await workout.viewWorkout(validWorkout.workoutTitle,validWorkout.workoutType,validChestWorkoutExercises);
 
     })
 })

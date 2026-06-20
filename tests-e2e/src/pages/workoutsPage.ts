@@ -30,6 +30,9 @@ export class Workouts {
     readonly closeExerciseButton : Locator;
     readonly deleteExerciseButton : Locator;
     readonly LogWorkoutButton : Locator;
+    readonly workoutOkModalButton : Locator;
+    readonly viewWorkoutButton : Locator;
+    readonly closeWorkoutModalButton : Locator;
 
     constructor(page:Page)
     {
@@ -51,12 +54,15 @@ export class Workouts {
         this.exerciseSetsInputL= this.page.getByRole('textbox').nth(4);
         this.exerciseWeightInput= this.page.getByRole('textbox', { name: 'in kgs' });
         this.exerciseDurationInput= this.page.getByRole('textbox', { name: 'in minutes' });
-        this.exerciseCalorieInput= this.page.locator(`locator('div:nth-child(6) > .flex-1').first()`);
+        this.exerciseCalorieInput= this.page.getByRole('textbox', { name: 'in kcal' });
         this.clearFieldsButton= this.page.getByRole('button', { name: 'Clear Feilds' });
         this.closeExerciseButton= this.page.getByRole('button', { name: 'Close' });
         this.logExerciseButton= this.page.getByRole('button', { name: 'Log Exercise' });
         this.deleteExerciseButton = this.page.getByRole('button', { name: 'Delete' });
         this.LogWorkoutButton= this.page.locator('form').getByRole('button', { name: 'Log Workout' });
+        this.workoutOkModalButton = this.page.getByRole('button', { name: 'OK' });
+        this.viewWorkoutButton = this.page.getByRole('button', { name: 'View', exact: true });
+        this.closeWorkoutModalButton = this.page.getByRole('button', { name: '✕' });
         
     }
 
@@ -84,8 +90,27 @@ export class Workouts {
             await this.logExerciseButton.click();
             await this.addExerciseButton.click();
 
-        }
-        
+        }        
+    }
+
+    async viewWorkout(workoutTitle:string, workoutType:string,exerciseArray: Exercise[])
+    {
+        await this.viewWorkoutButton.click();
+        await expect(this.workoutInputTitle).toHaveText(workoutTitle);
+        await expect(this.workoutTypeSelect).toHaveText(workoutType);
+        for ( const exercise  of exerciseArray)
+        {
+            await expect(this.exerciseNameInput).toHaveText(exercise.Name);
+            await expect(this.exerciseRepsInput).toHaveText(exercise.Reps);
+            await expect(this.exerciseSetsInputL).toHaveText(exercise.Sets);
+            await expect(this.exerciseWeightInput).toHaveText(exercise.Weight);
+            await expect(this.exerciseDurationInput).toHaveText(exercise.Duration);
+            await expect(this.exerciseCalorieInput).toHaveText(exercise.Calories);
+
+        }  
+        await this.closeWorkoutModalButton.click();      
+
+
     }
 
 
