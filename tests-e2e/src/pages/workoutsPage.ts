@@ -46,8 +46,8 @@ export class Workouts {
         this.workoutTotalDuration=this.page.getByText('Total Duration');
         this.workoutTotalCalories=this.page.getByText('Total Calories');
         this.workoutActions=this.page.getByRole('columnheader', { name: 'Actions' });
-        this.workoutInputTitle = this.page.locator('form').getByRole('textbox');
-        this.workoutTypeSelect= this.page.getByRole('combobox');
+        this.workoutInputTitle = this.page.getByTestId('workout-title');
+        this.workoutTypeSelect= this.page.getByTestId('workout-type');
         this.addExerciseButton= this.page.getByTestId('add-exercise-button');
         this.exerciseNameInput= this.page.getByTestId('add-exercise-name');
         this.exerciseSetsInputL= this.page.getByTestId('add-exercise-sets');
@@ -96,16 +96,19 @@ export class Workouts {
     async viewWorkout(workoutTitle:string, workoutType:string,exerciseArray: Exercise[])
     {
         await this.viewWorkoutButton.click();
-        await expect(this.workoutInputTitle).toHaveText(workoutTitle);
-        await expect(this.workoutTypeSelect).toHaveText(workoutType);
-        for ( const exercise  of exerciseArray)
+        await expect(this.workoutInputTitle).toHaveValue(workoutTitle);
+        await expect(this.workoutTypeSelect).toHaveValue(workoutType);
+        for(let i=0;i<exerciseArray.length;i++)     
         {
-            await expect(this.exerciseNameInput).toHaveText(exercise.Name);
-            await expect(this.exerciseRepsInput).toHaveText(exercise.Reps);
-            await expect(this.exerciseSetsInputL).toHaveText(exercise.Sets);
-            await expect(this.exerciseWeightInput).toHaveText(exercise.Weight);
-            await expect(this.exerciseDurationInput).toHaveText(exercise.Duration);
-            await expect(this.exerciseCalorieInput).toHaveText(exercise.Calories);
+            const exercise=exerciseArray[i];
+            const row=this.page.getByTestId(`exercise-row-${i}`)
+        
+            await expect(row.getByTestId('exercise-name')).toHaveValue(exercise.Name);
+            await expect(row.getByTestId('exercise-reps')).toHaveValue(exercise.Reps);
+            await expect(row.getByTestId('exercise-sets')).toHaveValue(exercise.Sets);
+            await expect(row.getByTestId('exercise-weight')).toHaveValue(exercise.Weight);
+            await expect(row.getByTestId('exercise-duration')).toHaveValue(exercise.Duration);
+            await expect(row.getByTestId('exercise-calories')).toHaveValue(exercise.Calories);
 
         }  
         await this.closeWorkoutModalButton.click();      
