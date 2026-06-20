@@ -5,7 +5,6 @@
 // - onClose: function to close the modal (usually toggles a parent state)
 // - mode: string that determines which success message to show ("log", "edit", "delete")
 function AddEditPopUpModal({ onClose, mode }) {
-    
     // Boolean flags derived from mode to simplify conditional rendering
     const isLog = mode == "log";
     const isEdit = mode == "edit";
@@ -16,25 +15,38 @@ function AddEditPopUpModal({ onClose, mode }) {
         // - fixed inset-0 covers the entire viewport
         // - semi-transparent black background to dim the page behind
         // - flex centering ensures modal is centered on screen
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                
+        <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            data-testid="workout-feedback-modal-overlay"
+        >
             {/* Modal container */}
-            <div className="bg-white p-6 rounded-lg shadow-xl w-100 text-center">
-                
+            <div
+                className="bg-white p-6 rounded-lg shadow-xl w-100 text-center"
+                data-testid={`workout-feedback-modal-${mode}`}
+            >
                 {/* Conditional success message based on action type */}
-                <div>
+                <div data-testid="workout-feedback-modal-message-container">
                     {isLog && (
-                        <h2 className="text-lg font-semibold text-gray-800">
+                        <h2
+                            className="text-lg font-semibold text-gray-800"
+                            data-testid="workout-feedback-log-message"
+                        >
                             Workout Logged Successfully!!!
                         </h2>
                     )}
                     {isEdit && (
-                        <h2 className="text-lg font-semibold text-gray-800">
+                        <h2
+                            className="text-lg font-semibold text-gray-800"
+                            data-testid="workout-feedback-edit-message"
+                        >
                             Workout Updated Successfully!!!
                         </h2>
                     )}
                     {isDelete && (
-                        <h2 className="text-lg font-semibold text-gray-800">
+                        <h2
+                            className="text-lg font-semibold text-gray-800"
+                            data-testid="workout-feedback-delete-message"
+                        >
                             Workout Deleted Successfully!!!
                         </h2>
                     )}
@@ -42,8 +54,12 @@ function AddEditPopUpModal({ onClose, mode }) {
 
                 {/* OK button section */}
                 {/* Clicking OK triggers onClose to dismiss the modal */}
-                <div className="flex justify-center mt-5">
+                <div
+                    className="flex justify-center mt-5"
+                    data-testid="workout-feedback-modal-actions"
+                >
                     <button
+                        data-testid="workout-feedback-modal-ok-button"
                         type="button"
                         className="px-6 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md transition"
                         onClick={onClose}

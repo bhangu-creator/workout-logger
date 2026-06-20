@@ -7,7 +7,6 @@ import { API_BASE_URL, ENDPOINTS } from "../api/endpoints.js";
 // ForgotPassword allows the user to request a password reset link
 // by submitting their registered email address
 function ForgotPassword() {
-
     // Form state for email input
     const [formData, setFormData] = useState({ email: "" });
 
@@ -30,26 +29,34 @@ function ForgotPassword() {
         setErrors(newErrors);
 
         // Form is valid only if all error messages are empty
-        return Object.values(newErrors).every(error => error == "");
+        return Object.values(newErrors).every(error => error === "");
     }
 
     return (
         // Page container with centered form
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 relative p-4 sm:p-0">
-            
+        <div
+            className="min-h-screen flex items-center justify-center bg-gray-100 relative p-4 sm:p-0"
+            data-testid="forgot-password-page"
+        >
             {/* Reusable logo header */}
             <LogoHeader />
 
             {/* Forgot password card */}
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                
+            <div
+                className="bg-white p-8 rounded-lg shadow-md w-full max-w-md"
+                data-testid="forgot-password-card"
+            >
                 {/* Page heading */}
-                <h2 className="text-3xl font-bold mb-6 text-center">
+                <h2
+                    className="text-3xl font-bold mb-6 text-center"
+                    data-testid="forgot-password-heading"
+                >
                     Enter registered email
                 </h2>
 
                 {/* Forgot password form */}
                 <form
+                    data-testid="forgot-password-form"
                     onSubmit={async (e) => {
                         e.preventDefault();
 
@@ -73,13 +80,13 @@ function ForgotPassword() {
                             // Show success message from server or fallback message
                             setServerMessage(
                                 response.data.message ||
-                                "if that email exists, a reset link has been sent!"
+                                    "if that email exists, a reset link has been sent!"
                             );
                         } catch (error) {
                             // Show error message from server or fallback message
                             setServerMessage(
                                 error.response?.data?.error ||
-                                "Something went Wrong"
+                                    "Something went Wrong"
                             );
                         } finally {
                             setLoading(false);
@@ -88,6 +95,7 @@ function ForgotPassword() {
                 >
                     {/* Email input field */}
                     <input
+                        data-testid="forgot-password-email-input"
                         name="email"
                         type="email"
                         value={formData.email}
@@ -104,24 +112,39 @@ function ForgotPassword() {
 
                     {/* Email validation error */}
                     {errors.email && (
-                        <p className="text-red-500 text-sm mb-2 text-center">
+                        <p
+                            className="text-red-500 text-sm mb-2 text-center"
+                            data-testid="forgot-password-email-error"
+                        >
                             {errors.email}
                         </p>
                     )}
 
                     {/* Informational message */}
-                    <p className="text-gray-600 text-center text-sm mb-4">
+                    <p
+                        className="text-gray-600 text-center text-sm mb-4"
+                        data-testid="forgot-password-info-text"
+                    >
                         A reset link will be sent to your registered email
                     </p>
 
                     {/* Server response message */}
                     {serverMessage && (
-
-                        <p className={`text-sm text-center mt-2 ${serverMessage.toLowerCase().includes("timeout")?"text-red-500":"text-green-600"}`}>{serverMessage}</p>
+                        <p
+                            data-testid="forgot-password-server-message"
+                            className={`text-sm text-center mt-2 ${
+                                serverMessage.toLowerCase().includes("timeout")
+                                    ? "text-red-500"
+                                    : "text-green-600"
+                            }`}
+                        >
+                            {serverMessage}
+                        </p>
                     )}
 
                     {/* Submit button */}
                     <button
+                        data-testid="forgot-password-submit-button"
                         disabled={loading}
                         type="submit"
                         className="w-full sm:w-40 block mx-auto bg-blue-500 text-white font-semibold py-2 rounded-lg mt-3 disabled:opacity-50"

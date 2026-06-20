@@ -12,8 +12,14 @@ import { API_BASE_URL, ENDPOINTS } from "../api/endpoints";
 // - onClose: function to close the modal
 // - handleAddEditDeleteWorkoutToList: syncs changes with parent workout list
 // - popupset: triggers success popup after log/edit
-function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToList, popupset }) {
-
+function WorkoutModal({
+    open,
+    mode,
+    data,
+    onClose,
+    handleAddEditDeleteWorkoutToList,
+    popupset
+}) {
     // Do not render modal if it is not open
     if (!open) return null;
 
@@ -36,22 +42,18 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
     // Mode helpers for conditional rendering and logic
     const isView = mode === "view";
     const isEdit = mode === "edit";
-    const isLog  = mode === "log";
+    const isLog = mode === "log";
 
     // Supported workout types for dropdown selection
-    const WORKOUT_TYPES = [
-        "strength",
-        "Cardio",
-        "HIT",
-        "yoga",
-        "other"
-    ];
+    const WORKOUT_TYPES = ["strength", "Cardio", "HIT", "yoga", "other"];
 
     // Adds a new exercise while enforcing a maximum limit
     const handleAddExercise = (ex) => {
         setExercises((prev) => {
             if (prev.length >= 20) {
-                setExerciseError("Exercise limit reached. Only 20 exercises are allowed per workout.");
+                setExerciseError(
+                    "Exercise limit reached. Only 20 exercises are allowed per workout."
+                );
                 return prev;
             }
             return [...prev, ex];
@@ -99,6 +101,7 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
     return (
         // Form wrapper handles submission logic for log/edit modes
         <form
+            data-testid={`workout-modal-form-${mode}`}
             onSubmit={async (e) => {
                 e.preventDefault();
                 if (!validateWorkout(title, type, exercises)) return;
@@ -131,7 +134,9 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                             workoutPayload
                         );
                         handleAddEditDeleteWorkoutToList(response.data, "log");
-                        setServerMessage(response?.data?.message || "Workout Logged Successfully");
+                        setServerMessage(
+                            response?.data?.message || "Workout Logged Successfully"
+                        );
                         onClose();
                         popupset("log");
                     }
@@ -143,11 +148,12 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
                             workoutPayload
                         );
                         handleAddEditDeleteWorkoutToList(response.data, "edit");
-                        setServerMessage(response?.data?.message || "Workout Updated Successfully");
+                        setServerMessage(
+                            response?.data?.message || "Workout Updated Successfully"
+                        );
                         onClose();
                         popupset("edit");
                     }
-
                 } catch (error) {
                     console.log("failed", error);
                     setServerMessage(error.data || "Something went wrong");
@@ -155,66 +161,132 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
             }}
         >
             {/* Modal overlay */}
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-xl">
-
+            <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                data-testid="workout-modal-overlay"
+            >
+                <div
+                    className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-xl"
+                    data-testid={`workout-modal-${mode}`}
+                >
                     {/* Modal header */}
-                    <h2 className="text-center text-2xl font-bold text-gray-800 mb-6">
+                    <h2
+                        className="text-center text-2xl font-bold text-gray-800 mb-6"
+                        data-testid="workout-modal-heading"
+                    >
                         Workout Details
                     </h2>
 
                     {/* Title and type inputs */}
-                    <div className="space-y-4 mb-6">
-                        <div className="flex items-center gap-3">
-                            <label className="w-40 text-gray-700 font-semibold">Workout Title</label>
+                    <div
+                        className="space-y-4 mb-6"
+                        data-testid="workout-modal-details-section"
+                    >
+                        <div
+                            className="flex items-center gap-3"
+                            data-testid="workout-title-field"
+                        >
+                            <label
+                                htmlFor="workout-title-input"
+                                className="w-40 text-gray-700 font-semibold"
+                                data-testid="workout-title-label"
+                            >
+                                Workout Title
+                            </label>
                             <input
-                                data-testid="workout-title"
+                                id="workout-title-input"
+                                data-testid="workout-title-input"
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                                 value={title}
                                 disabled={isView}
-                                onChange={(e) => {setTitle(e.target.value); setTitleError("");}}
+                                onChange={(e) => {
+                                    setTitle(e.target.value);
+                                    setTitleError("");
+                                }}
                             />
                         </div>
 
                         {/* Workout title validation error */}
                         {titleError && (
-                            <p className="text-red-500">{titleError}</p>
+                            <p
+                                className="text-red-500"
+                                data-testid="workout-title-error"
+                            >
+                                {titleError}
+                            </p>
                         )}
 
-                        <div className="flex items-center gap-3">
-                            <label className="w-40 text-gray-700 font-semibold">Workout Type</label>
+                        <div
+                            className="flex items-center gap-3"
+                            data-testid="workout-type-field"
+                        >
+                            <label
+                                htmlFor="workout-type-select"
+                                className="w-40 text-gray-700 font-semibold"
+                                data-testid="workout-type-label"
+                            >
+                                Workout Type
+                            </label>
                             <select
-                                data-testid="workout-type"
+                                id="workout-type-select"
+                                data-testid="workout-type-select"
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-400 disabled:bg-gray-100"
                                 value={type}
                                 disabled={isView}
-                                onChange={(e) => {setType(e.target.value);  setTypeError("")}}
+                                onChange={(e) => {
+                                    setType(e.target.value);
+                                    setTypeError("");
+                                }}
                             >
                                 <option value="">Select workout type</option>
                                 {WORKOUT_TYPES.map((w) => (
-                                    <option key={w} value={w}>{w}</option>
+                                    <option
+                                        key={w}
+                                        value={w}
+                                        data-testid={`workout-type-option-${w.toLowerCase()}`}
+                                    >
+                                        {w}
+                                    </option>
                                 ))}
                             </select>
                         </div>
 
                         {/* Workout type validation error */}
                         {typeError && (
-                            <p className="text-red-500">{typeError}</p>
+                            <p
+                                className="text-red-500"
+                                data-testid="workout-type-error"
+                            >
+                                {typeError}
+                            </p>
                         )}
                     </div>
 
                     {/* No-exercise validation error */}
                     {nullExerciseError && (
-                        <p className="text-red-500">{nullExerciseError}</p>
+                        <p
+                            className="text-red-500"
+                            data-testid="workout-null-exercise-error"
+                        >
+                            {nullExerciseError}
+                        </p>
                     )}
 
                     {/* Exercise count limit error */}
                     {exerciseError && (
-                        <p className="text-red-500">{exerciseError}</p>
+                        <p
+                            className="text-red-500"
+                            data-testid="workout-exercise-limit-error"
+                        >
+                            {exerciseError}
+                        </p>
                     )}
 
                     {/* Exercises list section */}
-                    <div className="w-full">
+                    <div
+                        className="w-full"
+                        data-testid="workout-exercise-section"
+                    >
                         <ExerciseSection
                             mode={mode}
                             exercises={exercises}
@@ -226,20 +298,33 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
 
                     {/* Form-level validation error */}
                     {formError && (
-                        <p className="text-red-500 mt-5">{formError}</p>
+                        <p
+                            className="text-red-500 mt-5"
+                            data-testid="workout-form-error"
+                        >
+                            {formError}
+                        </p>
                     )}
 
                     {/* Server response message */}
                     {serverMessage && (
-                        <p className="text-red-500 mt-5">{serverMessage}</p>
+                        <p
+                            className="text-red-500 mt-5"
+                            data-testid="workout-server-message"
+                        >
+                            {serverMessage}
+                        </p>
                     )}
 
                     {/* Submit button (hidden in view mode) */}
-                    <div className="flex justify-center mt-8">
+                    <div
+                        className="flex justify-center mt-8"
+                        data-testid="workout-modal-actions"
+                    >
                         {!isView && (
                             <button
-                                data-testid="submit"
-                                type="workout-button"
+                                data-testid="workout-submit-button"
+                                type="submit"
                                 className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
                             >
                                 {isEdit ? "Update Workout" : "Log Workout"}
@@ -249,13 +334,13 @@ function WorkoutModal({ open, mode, data, onClose, handleAddEditDeleteWorkoutToL
 
                     {/* Close modal button */}
                     <button
-                        data-testid="close-modal"
+                        data-testid="workout-close-modal-button"
+                        type="button"
                         onClick={onClose}
                         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold"
                     >
                         ✕
                     </button>
-
                 </div>
             </div>
         </form>

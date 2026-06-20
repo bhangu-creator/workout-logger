@@ -5,78 +5,86 @@
 import { useNavigate } from "react-router-dom";
 
 function StatsDrawer({ onclose, isOpen }) {
-  const navigate = useNavigate(); 
-  const DRAWER_CLOSES_MS= 500;
-  return (
-    <>
-      {/* 
+    const navigate = useNavigate();
+    const DRAWER_CLOSES_MS = 500;
+
+    return (
+        <>
+            {/*
         Backdrop overlay
         - Rendered only when the drawer is open
         - Covers the entire screen with a semi-transparent black layer
         - Clicking anywhere on it closes the drawer
       */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-40"
-          onClick={onclose}
-        ></div>
-      )}
+            {isOpen && (
+                <div
+                    data-testid="stats-drawer-overlay"
+                    className="fixed inset-0 bg-black bg-opacity-40 z-40"
+                    onClick={onclose}
+                ></div>
+            )}
 
-      {/*
+            {/*
         Drawer container
         - Fixed to the right side of the screen
         - Slides in and out using CSS transform
         - translate-x-0   → visible
         - translate-x-full → hidden (off-screen)
       */}
-      <div
-        className={`fixed top-0 right-0 h-screen w-80 bg-gray-300 border-l border-gray-300 shadow-lg shadow-xl bg-opacity-80 z-50 shadow-lg
+            <div
+                data-testid="stats-drawer"
+                className={`fixed top-0 right-0 h-screen w-80 bg-gray-300 border-l border-gray-300 shadow-lg shadow-xl bg-opacity-80 z-50 shadow-lg
           transform transition-transform duration-300 ease-out
            ${isOpen ? "translate-x-0" : "translate-x-full"}`}
-      >
-        {/*
+            >
+                {/*
           Drawer content
           - Vertically centered using margin-top
           - divide-y adds separators between menu items
         */}
-        <div className="items-center mt-[200px] divide-y divide-gray-200">
-          
-          {/* Navigate to Workouts by Type page in the same tab */}
-          <div
-            className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
-            onClick={() => {
-              onclose(); // close the drawer after navigation
-              navigate("/workoutsByType");
-            }}
-          >
-            View Workouts by Type
-          </div>
+                <div
+                    className="items-center mt-[200px] divide-y divide-gray-200"
+                    data-testid="stats-drawer-content"
+                >
+                    {/* Navigate to Workouts by Type page in the same tab */}
+                    <div
+                        data-testid="stats-drawer-workouts-by-type"
+                        className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
+                        onClick={() => {
+                            onclose(); // close the drawer after navigation
+                            navigate("/workoutsByType");
+                        }}
+                    >
+                        View Workouts by Type
+                    </div>
 
-          {/* Navigate to Workouts Trend page in the same tab */}
-          <div
-            className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
-            onClick={() => {
-              onclose(); // close the drawer after navigation
-              navigate("/workoutsTrends");
-            }}
-          >
-            View Workouts Trend
-          </div>
+                    {/* Navigate to Workouts Trend page in the same tab */}
+                    <div
+                        data-testid="stats-drawer-workouts-trend"
+                        className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
+                        onClick={() => {
+                            onclose(); // close the drawer after navigation
+                            navigate("/workoutsTrends");
+                        }}
+                    >
+                        View Workouts Trend
+                    </div>
 
-          {/* Navigate to Personal Records page in the same tab */}
-          <div
-            className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
-            onClick={() => {
-              onclose(); // close the drawer after navigation
-              navigate("/workoutRecords");
-            }}
-          >
-            View Personal Records
-          </div>
-        </div>
-      </div>
-    </>
-  );
+                    {/* Navigate to Personal Records page in the same tab */}
+                    <div
+                        data-testid="stats-drawer-workout-records"
+                        className="bg-red-400 px-8 py-8 text-lg text-center cursor-pointer hover:bg-red-500 font-medium"
+                        onClick={() => {
+                            onclose(); // close the drawer after navigation
+                            navigate("/workoutRecords");
+                        }}
+                    >
+                        View Personal Records
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 }
 
 // Exporting the drawer component for use in other parts of the app
