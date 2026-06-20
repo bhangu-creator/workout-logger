@@ -3,7 +3,6 @@ import { useState } from "react";
 // DatePicker allows users to select a custom date range
 // and sends the selected values back to the parent component
 function DatePicker({ handleCustomDates }) {
-    
     // Local state to track selected "from" and "to" dates
     const [selectedDates, setSelectedDates] = useState({
         from: "",
@@ -12,13 +11,26 @@ function DatePicker({ handleCustomDates }) {
 
     return (
         // Container for the date picker inputs
-        <div className="flex flex-col sm:flex-row items-center gap-4 bg-white p-3 rounded-lg shadow-md border border-gray-300">
-            
+        <div
+            className="flex flex-col sm:flex-row items-center gap-4 bg-white p-3 rounded-lg shadow-md border border-gray-300"
+            data-testid="date-picker"
+        >
             {/* From date input */}
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-                <label className="text-gray-700 font-semibold text-sm">From:</label>
-                <input 
-                    type="date" 
+            <div
+                className="flex items-center gap-2 w-full sm:w-auto"
+                data-testid="date-picker-from-field"
+            >
+                <label
+                    className="text-gray-700 font-semibold text-sm"
+                    htmlFor="date-picker-from-input"
+                    data-testid="date-picker-from-label"
+                >
+                    From:
+                </label>
+                <input
+                    id="date-picker-from-input"
+                    data-testid="date-picker-from-input"
+                    type="date"
                     value={selectedDates.from}
                     className="border border-gray-300 rounded px-2 py-1 text-sm w-full"
                     // Prevent selecting future dates
@@ -30,12 +42,23 @@ function DatePicker({ handleCustomDates }) {
                     }}
                 />
             </div>
-            
+
             {/* To date input */}
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-                <label className="text-gray-700 font-semibold text-sm">To:</label>
-                <input 
-                    type="date" 
+            <div
+                className="flex items-center gap-2 w-full sm:w-auto"
+                data-testid="date-picker-to-field"
+            >
+                <label
+                    className="text-gray-700 font-semibold text-sm"
+                    htmlFor="date-picker-to-input"
+                    data-testid="date-picker-to-label"
+                >
+                    To:
+                </label>
+                <input
+                    id="date-picker-to-input"
+                    data-testid="date-picker-to-input"
+                    type="date"
                     value={selectedDates.to}
                     className="border border-gray-300 rounded px-2 py-1 text-sm w-full"
                     // Prevent selecting future dates

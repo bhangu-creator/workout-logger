@@ -9,7 +9,7 @@ import TopRightUser from "../components/TopRightUser";
 function WorkoutTrend() {
     const [data, setData] = useState([]);
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(true);  
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchTrends() {
@@ -19,7 +19,7 @@ function WorkoutTrend() {
                     "get",
                     API_BASE_URL + ENDPOINTS.GET_WORKOUTS_TREND
                 );
-                setData(response?.data?.weeklyProgress || []); 
+                setData(response?.data?.weeklyProgress || []);
             } catch (error) {
                 console.error("Trend fetch error:", error);
                 setError("Unable to load Trends");
@@ -31,39 +31,71 @@ function WorkoutTrend() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100" data-testid="workout-trend-page">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-4 md:px-6">
+            <div
+                className="flex items-center justify-between px-4 py-4 md:px-6"
+                data-testid="workout-trend-header"
+            >
                 <LogoHeader mode="inline" />
                 <TopRightUser />
             </div>
 
             {/* Main Content */}
-            <div className="max-w-6xl mx-auto px-4 py-8 md:px-6">
-                <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
-                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
+            <div
+                className="max-w-6xl mx-auto px-4 py-8 md:px-6"
+                data-testid="workout-trend-container"
+            >
+                <div
+                    className="bg-white rounded-lg shadow-md p-4 md:p-6"
+                    data-testid="workout-trend-card"
+                >
+                    <h2
+                        className="text-xl md:text-2xl font-bold text-gray-800 mb-2"
+                        data-testid="workout-trend-heading"
+                    >
                         Workout Trends
                     </h2>
-                    <p className="text-gray-600 mb-6">
+                    <p
+                        className="text-gray-600 mb-6"
+                        data-testid="workout-trend-subheading"
+                    >
                         Your activity over the last 8 weeks
                     </p>
 
                     {/* Loading State */}
                     {loading && (
-                        <div className="flex items-center justify-center h-[360px]">
+                        <div
+                            className="flex items-center justify-center h-[360px]"
+                            data-testid="workout-trend-loading-state"
+                        >
                             <div className="text-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"></div>
-                                <p className="text-gray-600">Loading Trends...</p>
+                                <div
+                                    className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"
+                                    data-testid="workout-trend-loading-spinner"
+                                ></div>
+                                <p data-testid="workout-trend-loading-text">
+                                    Loading Trends...
+                                </p>
                             </div>
                         </div>
                     )}
 
                     {/* Error State */}
                     {error && !loading && (
-                        <div className="flex items-center justify-center h-[360px]">
+                        <div
+                            className="flex items-center justify-center h-[360px]"
+                            data-testid="workout-trend-error-state"
+                        >
                             <div className="text-center">
-                                <p className="text-red-500 text-lg font-semibold mb-2">{error}</p>
+                                <p
+                                    className="text-red-500 text-lg font-semibold mb-2"
+                                    data-testid="workout-trend-error-message"
+                                >
+                                    {error}
+                                </p>
                                 <button
+                                    data-testid="workout-trend-retry-button"
                                     onClick={() => window.location.reload()}
                                     className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                                 >
@@ -74,14 +106,18 @@ function WorkoutTrend() {
                     )}
 
                     {/* Empty State */}
-                    {!loading && !error && (!data || data.length === 0) && (  
-                        <div className="flex items-center justify-center h-[360px]">
+                    {!loading && !error && (!data || data.length === 0) && (
+                        <div
+                            className="flex items-center justify-center h-[360px]"
+                            data-testid="workout-trend-empty-state"
+                        >
                             <div className="text-center text-gray-500">
                                 <svg
                                     className="w-16 h-16 mx-auto mb-4 text-gray-400"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
+                                    data-testid="workout-trend-empty-icon"
                                 >
                                     <path
                                         strokeLinecap="round"
@@ -90,15 +126,28 @@ function WorkoutTrend() {
                                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                                     />
                                 </svg>
-                                <p className="text-lg font-semibold mb-2">No workout data available</p>
-                                <p className="text-sm">Start logging workouts to see your trends!</p>
+                                <p
+                                    className="text-lg font-semibold mb-2"
+                                    data-testid="workout-trend-empty-title"
+                                >
+                                    No workout data available
+                                </p>
+                                <p
+                                    className="text-sm"
+                                    data-testid="workout-trend-empty-description"
+                                >
+                                    Start logging workouts to see your trends!
+                                </p>
                             </div>
                         </div>
                     )}
 
                     {/* Chart */}
                     {!loading && !error && data && data.length > 0 && (
-                        <div className="overflow-x-auto">
+                        <div
+                            className="overflow-x-auto"
+                            data-testid="workout-trend-chart-section"
+                        >
                             <WorkoutsTrendChart weeklyProgress={data} />
                         </div>
                     )}
