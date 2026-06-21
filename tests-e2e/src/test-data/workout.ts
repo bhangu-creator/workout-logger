@@ -48,3 +48,21 @@ export const validChestWorkoutExercises : Exercise[] = [
     Calories : "15"
   },
 ];
+
+export const updateWorkout : workout ={
+
+    workoutTitle: "Chest and Back Workout",
+    workoutType : "other"
+
+}
+
+export const updateWorkoutExercises : Exercise[] = [
+  {
+    Name: 'Back Extension',
+    Sets: "3",
+    Reps: "8",
+    Weight: "40",
+    Duration : "8",
+    Calories : "15"
+  }
+];

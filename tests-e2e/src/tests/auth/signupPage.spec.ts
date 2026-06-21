@@ -54,7 +54,7 @@ test.describe('Signup Page UI Test Cases',()=>
 
         //assertion for the signup button
         await expect(signupPage.signupButton).toBeVisible();
-        await expect(signupPage.signupButton).toHaveAttribute('type','Submit');
+        await expect(signupPage.signupButton).toHaveAttribute('type','submit');
         await expect(signupPage.signupButton).toHaveText(uiText.signupPage.signupButtonText);
         await expect(signupPage.signupButton).toBeEnabled();
 
