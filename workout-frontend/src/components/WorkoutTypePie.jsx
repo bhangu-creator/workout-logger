@@ -3,7 +3,6 @@ import { ResponsiveContainer } from "recharts";
 import CustomTooltip from "../components/CustomToolTip";
 
 function WorkoutTypePie({ breakdownData, loading }) {
-    //if loading state and no data is provided
     if (loading) {
         return (
             <div
@@ -20,7 +19,6 @@ function WorkoutTypePie({ breakdownData, loading }) {
         );
     }
 
-    //if no data is provided
     if (
         !breakdownData ||
         !breakdownData.breakdown ||
@@ -36,9 +34,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
         );
     }
 
-    //data is provided
     if (!loading && breakdownData) {
-        //colors of the pie chart
         const COLORS = {
             Cardio: "#ef4444",
             strength: "#3b82f6",
@@ -47,7 +43,6 @@ function WorkoutTypePie({ breakdownData, loading }) {
             other: "#6b7280"
         };
 
-        //transforming the bakend data to chart date
         const chartData = breakdownData.breakdown.map((item) => ({
             name: item.type,
             value: Number(item.percent),
@@ -55,9 +50,6 @@ function WorkoutTypePie({ breakdownData, loading }) {
             kcal: item.kcal
         }));
 
-        console.log(chartData);
-
-        // Render the pie chart here
         return (
             <div
                 className="w-full h-[400px]"
@@ -77,6 +69,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
                             cy="50%"
                             outerRadius="100%"
                             label={({ value }) => `${value}%`}
+                            data-testid="workout-type-pie"
                         >
                             {chartData.map((entry) => (
                                 <Cell
@@ -85,10 +78,12 @@ function WorkoutTypePie({ breakdownData, loading }) {
                                 />
                             ))}
                         </Pie>
+
                         <Tooltip content={<CustomTooltip />} />
+
                         <Legend
+                            wrapperStyle={{ paddingTop: "12px" }}
                             formatter={(value) => {
-                                // Capitalize first letter for display
                                 return value.charAt(0).toUpperCase() + value.slice(1);
                             }}
                         />
