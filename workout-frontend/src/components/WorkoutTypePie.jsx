@@ -47,7 +47,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
             other: "#6b7280"
         };
 
-        //transforming the bakend data to chart date
+        //transforming the backend data to chart data
         const chartData = breakdownData.breakdown.map((item) => ({
             name: item.type,
             value: Number(item.percent),
@@ -55,9 +55,6 @@ function WorkoutTypePie({ breakdownData, loading }) {
             kcal: item.kcal
         }));
 
-        console.log(chartData);
-
-        // Render the pie chart here
         return (
             <div
                 className="w-full h-[400px]"
@@ -77,6 +74,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
                             cy="50%"
                             outerRadius="100%"
                             label={({ value }) => `${value}%`}
+                            isAnimationActive={false}
                         >
                             {chartData.map((entry) => (
                                 <Cell
@@ -85,7 +83,9 @@ function WorkoutTypePie({ breakdownData, loading }) {
                                 />
                             ))}
                         </Pie>
+
                         <Tooltip content={<CustomTooltip />} />
+
                         <Legend
                             formatter={(value) => {
                                 // Capitalize first letter for display
