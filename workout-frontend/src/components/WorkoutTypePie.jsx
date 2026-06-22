@@ -3,6 +3,7 @@ import { ResponsiveContainer } from "recharts";
 import CustomTooltip from "../components/CustomToolTip";
 
 function WorkoutTypePie({ breakdownData, loading }) {
+    //if loading state and no data is provided
     if (loading) {
         return (
             <div
@@ -19,6 +20,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
         );
     }
 
+    //if no data is provided
     if (
         !breakdownData ||
         !breakdownData.breakdown ||
@@ -34,7 +36,9 @@ function WorkoutTypePie({ breakdownData, loading }) {
         );
     }
 
+    //data is provided
     if (!loading && breakdownData) {
+        //colors of the pie chart
         const COLORS = {
             Cardio: "#ef4444",
             strength: "#3b82f6",
@@ -43,6 +47,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
             other: "#6b7280"
         };
 
+        //transforming the backend data to chart data
         const chartData = breakdownData.breakdown.map((item) => ({
             name: item.type,
             value: Number(item.percent),
@@ -69,7 +74,7 @@ function WorkoutTypePie({ breakdownData, loading }) {
                             cy="50%"
                             outerRadius="100%"
                             label={({ value }) => `${value}%`}
-                            data-testid="workout-type-pie"
+                            isAnimationActive={false}
                         >
                             {chartData.map((entry) => (
                                 <Cell
@@ -82,8 +87,8 @@ function WorkoutTypePie({ breakdownData, loading }) {
                         <Tooltip content={<CustomTooltip />} />
 
                         <Legend
-                            wrapperStyle={{ paddingTop: "12px" }}
                             formatter={(value) => {
+                                // Capitalize first letter for display
                                 return value.charAt(0).toUpperCase() + value.slice(1);
                             }}
                         />
