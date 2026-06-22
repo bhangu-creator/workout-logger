@@ -38,6 +38,7 @@ export class Workouts {
     readonly deleteWorkoutModalButton : Locator;
     readonly delereWorkoutModalOkButton : Locator;
     readonly editWorkoutButton : Locator;
+    readonly viewWorkoutByType : Locator;
 
 
     constructor(page:Page)
@@ -46,7 +47,7 @@ export class Workouts {
         this.logOut=this.page.getByText('Log out');
         this.logWorkout= this.page.getByRole('button', { name: 'Log Workout' });
         this.workoutSearchBar= this.page.getByTestId('workouts-search-input');
-        this.viewStats=this.page.getByRole('button', { name: 'View Stats' });
+        this.viewStats=this.page.getByTestId('workouts-view-stats-button');
         this.workoutTitle=this.page.getByText('Title');
         this.workoutType=this.page.getByText('Type', { exact: true });
         this.workoutTotalDuration=this.page.getByText('Total Duration');
@@ -74,6 +75,7 @@ export class Workouts {
         this.deleteWorkoutModalButton = this.page.getByTestId('delete-workout-confirm-button');
         this.delereWorkoutModalOkButton = this.page.getByTestId('workout-feedback-modal-ok-button');
         this.editWorkoutButton = this.page.getByTestId('edit-workout');
+        this.viewWorkoutByType = this.page.getByTestId('stats-drawer-workouts-by-type');
 
         
     }
@@ -160,9 +162,18 @@ export class Workouts {
     async deleteWorkout(searchKeyword : string)
     {
         await this.workoutSearchBar.fill(searchKeyword);
+        await this.deleteWorkoutButton.waitFor({state:'visible'});
         await this.deleteWorkoutButton.click();
+        await this.deleteWorkoutModalButton.waitFor({state:'visible'});
         await this.deleteWorkoutModalButton.click();
+        await expect(this.delereWorkoutModalOkButton).toBeVisible();
         await this.delereWorkoutModalOkButton.click();
+    }
+
+    async openViewWorkoutByType()
+    {
+        await this.viewStats.click();
+        await this.viewWorkoutByType.click();
     }
 
 }
