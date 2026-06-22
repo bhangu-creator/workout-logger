@@ -94,6 +94,29 @@ function WorkoutTypePie({ breakdownData, loading }) {
                         />
                     </PieChart>
                 </ResponsiveContainer>
+
+                {/* Hidden breakdown list for stable Playwright validation */}
+                <div className="hidden" data-testid="workout-type-breakdown-list">
+                    {chartData.map((entry) => (
+                        <div
+                            key={entry.name}
+                            data-testid={`workout-type-row-${entry.name}`}
+                        >
+                            <p data-testid={`workout-type-name-${entry.name}`}>
+                                {entry.name}
+                            </p>
+                            <p data-testid={`workout-type-count-${entry.name}`}>
+                                Workouts: {entry.count}
+                            </p>
+                            <p data-testid={`workout-type-kcal-${entry.name}`}>
+                                Kcal Burned: {entry.kcal}
+                            </p>
+                            <p data-testid={`workout-type-share-${entry.name}`}>
+                                Share: {entry.value}%
+                            </p>
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
