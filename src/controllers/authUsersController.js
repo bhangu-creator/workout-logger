@@ -34,6 +34,11 @@ const signup= async (req,res,next)=>
 
         const {name,email,password}=req.body
 
+        //check if email format is valid
+        if (!gmailRegex.test(email)) {
+            return res.status(400).json({ error: "Invalid email" });
+        }
+
         //check if user already exists
         const existingUser=await User.findOne({email});
         if (existingUser){
