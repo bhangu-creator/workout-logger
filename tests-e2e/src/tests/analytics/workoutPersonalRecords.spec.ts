@@ -3,9 +3,8 @@ import { test, expect } from "@playwright/test";
 import { Workouts } from "../../pages/workoutsPage";
 import { LoginPage } from "../../pages/loginPage";
 import { validUser } from "../../test-data/users";
-import { WorkoutTypeAnalytic } from "../../pages/workoutTrendPage";
-import { barChartData ,thisWeekAnalyticsData,updatedBarChartData,updatedThisWeekAnalyticsData,deleteWorkoutTitle,deletedBarChartData} from '../../test-data/workout';
-
+import { WorkoutPersonalRecords } from "../../pages/workoutPersonalRecordsPage";
+import { personalRecordsData,updatedPersonalRecordsData,deletedPersonalRecordsData,thisWeekAnalyticsData,updatedThisWeekAnalyticsData,deleteWorkoutTitle} from "../../test-data/workout";
 
 test.beforeEach(
     "Log in as valid user before crud operations on workouts",
@@ -15,42 +14,40 @@ test.beforeEach(
     }
 );
 
-test.describe("Workout Type Analytics Section Tests",()=>
+test.describe('Workout Personal Records Tests',()=>
 {
-    test("To verify workout trend analytics for last week",async ({page})=>
+    test('To verify if Personal Records Data is showing correctly ',async({page})=>
     {
         const workout = new Workouts(page);
-        const trendAnalytic= new WorkoutTypeAnalytic(page);
+        const personalRecord= new WorkoutPersonalRecords(page);
 
-        //create the data for bar chart
+        //create data for personal records
         for (const data of thisWeekAnalyticsData) 
         {
             await workout.createWorkout(data.workoutTitle,data.workoutType,data.exercise);
         }
 
-        //validate the data in bar chart
-        await workout.openViewWorkoutByTrend();
-        await trendAnalytic.hoverOverTheLastTrendBar();
-        await trendAnalytic.verifyToolTipDetails(barChartData);
+        //validate the created data in personal records
+        await workout.openViewWorkoutByPersonalRecords();
+        await personalRecord.verifyPersonalRecords(personalRecordsData);
 
-        //update the data for barchart
+
+        //update the data for Personal Records
         await workout.navigateToHomePage();
         await workout.searchWorkout(thisWeekAnalyticsData[0].workoutTitle);
         await workout.editWorkout(updatedThisWeekAnalyticsData.workoutTitle,updatedThisWeekAnalyticsData.workoutType,updatedThisWeekAnalyticsData.exercise);
 
-        //validate the updated data in bar chart
-        await workout.openViewWorkoutByTrend();
-        await trendAnalytic.hoverOverTheLastTrendBar();
-        await trendAnalytic.verifyToolTipDetails(updatedBarChartData);
+        //validate the data for Personal Records
+        await workout.openViewWorkoutByPersonalRecords();
+        await personalRecord.verifyPersonalRecords(updatedPersonalRecordsData);
 
         //delete the workout 
         await workout.navigateToHomePage();
         await workout.deleteWorkout(deleteWorkoutTitle);
 
-        //verify the deleted data in bar chart
-        await workout.openViewWorkoutByTrend();
-        await trendAnalytic.hoverOverTheLastTrendBar();
-        await trendAnalytic.verifyToolTipDetails(deletedBarChartData);
+        //verify the deleted data in Personal Records
+        await workout.openViewWorkoutByPersonalRecords();
+        await personalRecord.verifyPersonalRecords(deletedPersonalRecordsData);
         await workout.navigateToHomePage();
 
         //verify that list is not empty
@@ -65,6 +62,5 @@ test.describe("Workout Type Analytics Section Tests",()=>
             }
         }
 
-        
     })
 })

@@ -83,7 +83,7 @@ export class WorkoutTypeAnalytic {
         await expect(this.workoutTypeSlices).toHaveCount(expectedSliceCount, {
             timeout: 10000
         });
-        await expect(this.workoutTypeBreakdownList).toBeAttached();
+       await expect(this.workoutTypeBreakdownList).toHaveCount(1);
     }
 
     async hoverSlice(indx: number) {
@@ -121,25 +121,26 @@ export class WorkoutTypeAnalytic {
     }
 
     // NEW: stable validation using hidden breakdown rows
-    async verifyBreakdownData(tooltipsDetails: TooltipMap) {
-        await expect(this.workoutTypeBreakdownList).toBeAttached();
+async verifyBreakdownData(tooltipsDetails: TooltipMap) {
+    await expect(this.workoutTypeBreakdownList).toBeAttached();
 
-        for (const workoutType of Object.keys(tooltipsDetails)) {
-            const expected = tooltipsDetails[workoutType];
+    for (const workoutType of Object.keys(tooltipsDetails)) {
+        const expected = tooltipsDetails[workoutType];
 
-            const row = this.page.getByTestId(`workout-type-row-${workoutType}`);
-            const name = this.page.getByTestId(`workout-type-name-${workoutType}`);
-            const count = this.page.getByTestId(`workout-type-count-${workoutType}`);
-            const kcal = this.page.getByTestId(`workout-type-kcal-${workoutType}`);
-            const share = this.page.getByTestId(`workout-type-share-${workoutType}`);
+        const row = this.page.getByTestId(`workout-type-row-${workoutType}`);
+        await expect(row).toBeAttached();
 
-            await expect(row).toBeAttached();
-            await expect(name).toHaveText(workoutType);
-            await expect(count).toHaveText(expected.WorkoutCount);
-            await expect(kcal).toHaveText(expected.KcalCount);
-            await expect(share).toHaveText(expected.ShareCount);
-        }
+        const name = row.getByTestId(`workout-type-name-${workoutType}`);
+        const count = row.getByTestId(`workout-type-count-${workoutType}`);
+        const kcal = row.getByTestId(`workout-type-kcal-${workoutType}`);
+        const share = row.getByTestId(`workout-type-share-${workoutType}`);
+
+        await expect(name).toHaveText(workoutType);
+        await expect(count).toHaveText(expected.WorkoutCount);
+        await expect(kcal).toHaveText(expected.KcalCount);
+        await expect(share).toHaveText(expected.ShareCount);
     }
+}
 
     async navigateToHomePage() {
         await this.workoutLogoLabel.click({ force: true });

@@ -1,3 +1,4 @@
+import { Workouts } from "../pages/workoutsPage";
 
 export interface TooltipStats {
   WorkoutCount: string;
@@ -321,5 +322,124 @@ export const deletedTooltipData : TooltipMap ={
   KcalCount : "Kcal Burned: 50",
   ShareCount : "Share: 25%"
   },
+
+}
+
+export interface BarChart 
+{
+  Workouts: string,
+  Calories:  string,
+  Duration: string
+} 
+
+
+export const barChartData : BarChart = 
+{
+  Workouts: " Workouts: 5",
+  Calories : "Calories: 480 kcal",
+  Duration : "Duration: 115 min"
+
+}
+
+export const updatedBarChartData : BarChart = 
+{
+  Workouts: " Workouts: 5",
+  Calories : "Calories: 500 kcal",
+  Duration : "Duration: 115 min"
+
+}
+
+export const deletedBarChartData : BarChart = 
+{
+  Workouts: " Workouts: 4",
+  Calories : "Calories: 200 kcal",
+  Duration : "Duration: 55 min"
+
+}
+
+export interface PersonalRecords 
+{
+  MaxDurationWorkoutValue: string,
+  MaxKcalBurnedValue : string,
+  CurrentStreakValue: string,
+  LongestStreakValue: string,
+  TotalWorkoutLogged: string,
+  TotalKcalBurned: string,
+  TotalDuration: string,
+  AverageDuration : string,
+  AverageKcalBurned: string
+  MostActiveDayDate: string,
+  MostActiveDayExercise: string,
+  MostActiveDayTotalKcal : string,
+  MostActiveDayTotalDuration : string
+  MostActiveWeek: string,
+  MostActiveWeekExercise : string,
+  MostActiveWeekTotalKcal:  string,
+  MostActiveWeekTotalDuration: string
+}
+
+export const personalRecordsData: PersonalRecords =
+{
+  MaxDurationWorkoutValue: "60 min",
+  MaxKcalBurnedValue : "300 kcal",
+  CurrentStreakValue: "1 days",
+  LongestStreakValue: "1 days",
+  TotalWorkoutLogged: "5",
+  TotalKcalBurned: "480",
+  TotalDuration: "1 hr 55 min",
+  AverageDuration : "23 min",
+  AverageKcalBurned: "96",
+  MostActiveDayDate: "Jun 22, 2026",
+  MostActiveDayExercise: "5",
+  MostActiveDayTotalKcal : "480",
+  MostActiveDayTotalDuration : "1 hr 55 min",
+  MostActiveWeek: "Jun 21 2026 - Jun 27 2026",
+  MostActiveWeekExercise : "5",
+  MostActiveWeekTotalKcal:  "480",
+  MostActiveWeekTotalDuration: "1 hr 55 min"
+
+}
+
+export const updatedPersonalRecordsData: PersonalRecords =
+{
+  MaxDurationWorkoutValue: "60 min",
+  MaxKcalBurnedValue : "300 kcal",
+  CurrentStreakValue: "1 days",
+  LongestStreakValue: "1 days",
+  TotalWorkoutLogged: "5",
+  TotalKcalBurned: "500",
+  TotalDuration: "1 hr 55 min",
+  AverageDuration : "23 min",
+  AverageKcalBurned: "100",
+  MostActiveDayDate: "Jun 22, 2026",
+  MostActiveDayExercise: "5",
+  MostActiveDayTotalKcal : "500",
+  MostActiveDayTotalDuration : "1 hr 55 min",
+  MostActiveWeek: "Jun 21 2026 - Jun 27 2026",
+  MostActiveWeekExercise : "5",
+  MostActiveWeekTotalKcal:  "500",
+  MostActiveWeekTotalDuration: "1 hr 55 min"
+
+}
+
+export const deletedPersonalRecordsData: PersonalRecords =
+{
+  MaxDurationWorkoutValue: "20 min",
+  MaxKcalBurnedValue : "100 kcal",
+  CurrentStreakValue: "1 days",
+  LongestStreakValue: "1 days",
+  TotalWorkoutLogged: "4",
+  TotalKcalBurned: "200",
+  TotalDuration: "55 min",
+  AverageDuration : "14 min",
+  AverageKcalBurned: "50",
+  MostActiveDayDate: "Jun 22, 2026",
+  MostActiveDayExercise: "4",
+  MostActiveDayTotalKcal : "200",
+  MostActiveDayTotalDuration : "55 min",
+  MostActiveWeek: "Jun 21 2026 - Jun 27 2026",
+  MostActiveWeekExercise : "4",
+  MostActiveWeekTotalKcal:  "200",
+  MostActiveWeekTotalDuration: "55 min"
 
 }

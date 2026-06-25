@@ -36,10 +36,13 @@ export class Workouts {
     readonly deleteWorkoutButton : Locator;
     readonly deleteWorkoutCancelButton : Locator;
     readonly deleteWorkoutModalButton : Locator;
-    readonly delereWorkoutModalOkButton : Locator;
+    readonly deleteWorkoutModalOkButton : Locator;
     readonly editWorkoutButton : Locator;
     readonly viewWorkoutByType : Locator;
-
+    readonly viewWorkoutByTrend : Locator;
+    readonly workoutLogoLabel : Locator;
+    readonly workoutRows : Locator;
+    readonly viewPersonalRecords: Locator;
 
     constructor(page:Page)
     {
@@ -73,9 +76,13 @@ export class Workouts {
         this.deleteWorkoutButton = this.page.getByTestId('delete-workout');
         this.deleteWorkoutCancelButton= this.page.getByTestId('delete-workout-cancel-button');
         this.deleteWorkoutModalButton = this.page.getByTestId('delete-workout-confirm-button');
-        this.delereWorkoutModalOkButton = this.page.getByTestId('workout-feedback-modal-ok-button');
+        this.deleteWorkoutModalOkButton = this.page.getByTestId('workout-feedback-modal-ok-button');
         this.editWorkoutButton = this.page.getByTestId('edit-workout');
         this.viewWorkoutByType = this.page.getByTestId('stats-drawer-workouts-by-type');
+        this.viewWorkoutByTrend=this.page.getByTestId('stats-drawer-workouts-trend');
+        this.workoutLogoLabel = this.page.getByTestId('logo-header-title');
+        this.workoutRows = this.page.locator('[data-testid^="workout-row-"]');
+        this.viewPersonalRecords=this.page.getByTestId('stats-drawer-workout-records');
 
         
     }
@@ -159,21 +166,43 @@ export class Workouts {
 
     }
 
-    async deleteWorkout(searchKeyword : string)
-    {
-        await this.workoutSearchBar.fill(searchKeyword);
-        await this.deleteWorkoutButton.waitFor({state:'visible'});
-        await this.deleteWorkoutButton.click();
-        await this.deleteWorkoutModalButton.waitFor({state:'visible'});
-        await this.deleteWorkoutModalButton.click();
-        await expect(this.delereWorkoutModalOkButton).toBeVisible();
-        await this.delereWorkoutModalOkButton.click();
-    }
+   async deleteWorkout(searchKeyword: string) {
+    await this.workoutSearchBar.clear();
+    await this.workoutSearchBar.fill(searchKeyword);
 
+    // row delete
+    await expect(this.deleteWorkoutButton).toBeVisible({ timeout: 5000 });
+    await this.deleteWorkoutButton.click();
+
+    // confirm modal delete
+    await expect(this.deleteWorkoutModalButton).toBeVisible({ timeout: 5000 });
+    await this.deleteWorkoutModalButton.click();
+
+
+    await expect(this.deleteWorkoutModalOkButton).toBeVisible({ timeout: 5000 });
+    await this.deleteWorkoutModalOkButton.click();
+
+}
     async openViewWorkoutByType()
     {
         await this.viewStats.click();
         await this.viewWorkoutByType.click();
+    }
+
+    async openViewWorkoutByTrend()
+    {
+        await this.viewStats.click();
+        await this.viewWorkoutByTrend.click();
+    }
+
+    async openViewWorkoutByPersonalRecords()
+    {
+        await this.viewStats.click();
+        await this.viewPersonalRecords.click();
+    }
+
+    async navigateToHomePage() {
+        await this.workoutLogoLabel.click({ force: true });
     }
 
 }

@@ -28,9 +28,8 @@ test.describe("Workout Type Analytics Section Tests", () => {
             );
         }
 
-        // =========================
+
         // CREATE PHASE VALIDATION
-        // =========================
         await workout.openViewWorkoutByType();
         await analytic.checkThisWeekBox();
         await analytic.verifyThisWeekTotalData(
@@ -47,9 +46,7 @@ test.describe("Workout Type Analytics Section Tests", () => {
         await analytic.verifyToolTipDetails(tooltipData);
         await analytic.resetChartHover();
 
-        // =========================
         // UPDATE PHASE VALIDATION
-        // =========================
         await analytic.navigateToHomePage();
         await workout.searchWorkout(thisWeekAnalyticsData[0].workoutTitle);
         await workout.editWorkout(
@@ -70,10 +67,7 @@ test.describe("Workout Type Analytics Section Tests", () => {
         // stable validation after update
         await analytic.verifyBreakdownData(updatedTooltipData);
 
-        // =========================
         // DELETE PHASE VALIDATION
-        // =========================
-        
         await analytic.navigateToHomePage();
         await workout.deleteWorkout(deleteWorkoutTitle);
 
@@ -88,14 +82,13 @@ test.describe("Workout Type Analytics Section Tests", () => {
 
         // stable validation after delete
         await analytic.verifyBreakdownData(deletedTooltipData);
-
         await analytic.navigateToHomePage();
 
+        //verify that list is not empty
+        await expect(workout.workoutRows.first()).toBeVisible();
 
-        // =========================
-        // TEARDOWN
-        // =========================
-    
+
+        // TEARDOWN    
         for (let i = 0; i < thisWeekAnalyticsData.length; i++) {
             const title = thisWeekAnalyticsData[i].workoutTitle;
             if (title !== deleteWorkoutTitle) {
