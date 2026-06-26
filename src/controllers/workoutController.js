@@ -156,9 +156,8 @@ const updateWorkout = async (req,res,next)=>{
         const {title,type,exercises}=req.body;
 
         //verify if the sent data for update is valid
-        if (!title || !type || (!exercises || exercises.length === 0)) {
-            
-            throw new AppError(400,"Required fields are not provided for update");
+        if (!title?.trim() || !type?.trim() || !exercises?.length) {
+            throw new AppError(400, "Required fields are not provided for update");
         }
         
         //verify if the workout id exists for the sent user's id and update the workout details
