@@ -1,3 +1,5 @@
+import { updateWorkout } from "../test-data/workout";
+
 export const API_ROUTES = {
   auth: {
     signup: '/api/auth/signup',
@@ -6,7 +8,8 @@ export const API_ROUTES = {
 
   workouts: {
     getAll: '/api/workouts',
-    create: '/api/workouts',
+    createWorkout: '/api/workouts',
+    updateWorkout:'/api/workouts',
     byId: (workoutId: string) => `/api/workouts/${workoutId}`,
   },
 
