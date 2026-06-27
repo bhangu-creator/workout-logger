@@ -26,6 +26,33 @@ export class WorkoutService
             data:payload})
     }
 
+    async getWorkoutById(token:string,id:string)
+    {
+       const response= await this.request.get(process.env.BACKEND_BASE_URL+API_ROUTES.workouts.getWorkout+'/'+id,
+            {headers:
+                {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        return response;
+
+    }
+
+    async getAllWorkouts(token:string)
+    {
+       const response= await this.request.get(process.env.BACKEND_BASE_URL+API_ROUTES.workouts.getAllWorkouts,
+            {headers:
+                {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        return response;
+
+    }
+
+
     async deleteWorkoutById(token:string,id:string)
     {
        const response= await this.request.delete(process.env.BACKEND_BASE_URL+API_ROUTES.workouts.createWorkout+'/'+id,
@@ -35,7 +62,6 @@ export class WorkoutService
                 }
             }
         )
-        if (response.status() !== 200) throw new Error('Workout Id Invalid');
         return response;
 
     }

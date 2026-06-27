@@ -1,8 +1,8 @@
 import {test,expect} from '@playwright/test';
-import { AuthService } from '../../../../api/services/auth.service';
-import { WorkoutService } from '../../../../api/services/workout.service';
-import { validLoginUserApi } from '../../../../api/test-data/auth.data';
-import { createWorkoutData,expectedCreateWorkoutResponse ,deleteWorkoutResponse,updateWorkout,expectedUpdateWorkoutResponse,invalidToken,updateWorkoutId,invalidTokenResponse,invalidUpdateWorkoutId,invalidUpdateWorkoutIdResponse} from '../../../../api/test-data/workout.data';
+import { AuthService } from '../../../api/services/auth.service';
+import { WorkoutService } from '../../../api/services/workout.service';
+import { validLoginUserApi } from '../../../api/test-data/auth.data';
+import { createWorkoutData,expectedCreateWorkoutResponse ,deleteWorkoutResponse,updateWorkout,expectedUpdateWorkoutResponse,invalidToken,updateWorkoutId,invalidTokenResponse,invalidUpdateWorkoutId,invalidUpdateWorkoutIdResponse,updateMissingFields} from '../../../api/test-data/workout.data';
 
 test.describe('Update Workout API Test Cases',()=>
 {
@@ -90,25 +90,43 @@ test.describe('Update Workout API Test Cases',()=>
         expect(response.status()).toBe(400);
 
         const body = await response.json();
-        expect(body).toMatchObject(missingTitleResponse);
+        expect(body).toMatchObject(updateMissingFields);
 
     })
     
     
-        test('To verify workout cannot get created with missing type',async({request})=>
-        {
-            const auth= new AuthService(request);
-            const workout= new WorkoutService(request);
-    
-            const token = await auth.getToken(validLoginUserApi);
-            const dataToBeSent = JSON.parse(JSON.stringify(createWorkoutData));
-            dataToBeSent.type="";
-            const response = await workout.createWorkout(token,dataToBeSent);
-    
-            expect(response.status()).toBe(400);
-    
-            const body = await response.json();
-            expect(body).toMatchObject(missingTypeResponse);
-    
-        })
+    test('To verify workout cannot get updated with missing type',async({request})=>
+    {
+        const auth= new AuthService(request);
+        const workout= new WorkoutService(request);
+
+        const token = await auth.getToken(validLoginUserApi);
+        const dataToBeSent = JSON.parse(JSON.stringify(updateWorkout));
+        dataToBeSent.type="";
+        const response = await workout.updateWorkout(token,updateWorkoutId,dataToBeSent);
+
+        expect(response.status()).toBe(400);
+
+        const body = await response.json();
+        expect(body).toMatchObject(updateMissingFields);
+
+    })
+
+      test('To verify workout cannot get updated with missing exercises',async({request})=>
+    {
+        const auth= new AuthService(request);
+        const workout= new WorkoutService(request);
+
+        const token = await auth.getToken(validLoginUserApi);
+        const dataToBeSent = JSON.parse(JSON.stringify(updateWorkout));
+        dataToBeSent.exercises=[];
+        const response = await workout.updateWorkout(token,updateWorkoutId,dataToBeSent);
+
+        expect(response.status()).toBe(400);
+
+        const body = await response.json();
+        expect(body).toMatchObject(updateMissingFields);
+
+    })
+
 })

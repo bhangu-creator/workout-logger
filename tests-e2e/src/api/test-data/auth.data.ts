@@ -36,6 +36,18 @@ export const validLoginUserApi : LoginData =
     password: "Bhangug67@"
 }
 
+export const noWorkoutUserApi : LoginData =
+{
+    email:"NoworkTest@gmail.com",
+    password: "Bhangug67@"
+}
+
+export const workoutsUserApi : LoginData =
+{
+	email: "getWorkouts@gmail.com",
+    password: "Bhangug67@"
+}
+
 export const invalidPasswordLoginUser : LoginData =
 {
     email:"testpy@gmail.com",

@@ -1,4 +1,3 @@
-import { updateWorkout } from "../test-data/workout";
 
 export const API_ROUTES = {
   auth: {
@@ -7,15 +6,16 @@ export const API_ROUTES = {
   },
 
   workouts: {
-    getAll: '/api/workouts',
     createWorkout: '/api/workouts',
     updateWorkout:'/api/workouts',
-    byId: (workoutId: string) => `/api/workouts/${workoutId}`,
+    getWorkout :'/api/workouts',
+    getAllWorkouts : '/api/workouts/'
+   
   },
 
   analytics: {
-    summary: '/api/analytics/summary',
-    category: '/api/analytics/category',
-    monthly: '/api/analytics/monthly',
+    type:'/api/workouts/stats/type-breakdown',
+    trend:'/api/workouts/stats/get-weekly-trends',
+    records:'/api/workouts/stats/getPersonalRecordsStats'
   },
 };

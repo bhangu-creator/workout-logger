@@ -1,8 +1,8 @@
 import {test,expect} from '@playwright/test';
-import { AuthService } from '../../../../api/services/auth.service';
-import { WorkoutService } from '../../../../api/services/workout.service';
-import { validLoginUserApi } from '../../../../api/test-data/auth.data';
-import { createWorkoutData,expectedCreateWorkoutResponse ,deleteWorkoutResponse,invalidToken,invalidTokenResponse,missingTitleResponse,missingTypeResponse,missingExercises} from '../../../../api/test-data/workout.data';
+import { AuthService }  from '../../../api/services/auth.service';
+import { WorkoutService }  from '../../../api/services/workout.service';
+import { validLoginUserApi }  from '../../../api/test-data/auth.data';
+import { createWorkoutData,expectedCreateWorkoutResponse ,deleteWorkoutResponse,invalidToken,invalidTokenResponse,missingTitleResponse,missingTypeResponse,missingExercises} from '../../../api/test-data/workout.data';
 
 test.describe('Create Workout API Test Cases',()=>
 {

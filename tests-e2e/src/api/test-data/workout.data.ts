@@ -91,6 +91,12 @@ export const deleteWorkoutResponse =
     "message": "Workout has been deleted successfully"
 }
 
+export const duplicateDeleteWorkoutResponse =
+{
+    "success": false,
+    "error": "Workout not Found"
+}
+
 export const invalidToken = "ssa"
 
 export const invalidTokenResponse =
@@ -102,6 +108,12 @@ export const missingTitleResponse =
 {
     "success": false,
     "error": "Title or exercises are required"
+}
+
+export const updateMissingFields =
+{
+    "success": false,
+    "error": "Required fields are not provided for update"
 }
 
 export const missingTypeResponse =
@@ -123,4 +135,91 @@ export const invalidUpdateWorkoutIdResponse =
 {
     "success": false,
     "error": "Invalid Workout Id"
+}
+
+export const getWorkoutInvalidResponse =
+{
+    "success": false,
+    "error": "Server Error while fetching the workout"
+}
+
+export const getEmptyWorkoutResponse =
+{ workouts: [], sucess: true, count: 0 }
+
+
+export const getWorkoutByIdResponse =
+{
+    workout: {
+        title: "chest exercise",
+        type: "strength",
+        exercises: [
+            {
+                name: "bench press",
+                sets: 3,
+                reps: 15,
+                weight: 50,
+                duration: 10,
+                kcalBurned: 50,
+            }
+        ],
+    }
+
+}
+
+export const getAllWorkoutsData =
+{
+    workouts: [
+        {
+            title: "HIT",
+            type: "HIT",
+            exercises: [
+                {
+                    name: "jumping jacks",
+                    sets: 3,
+                    reps: 15,
+                    weight: 0,
+                    duration: 10,
+                    kcalBurned: 50,
+                },
+                {
+                    name: "rop skip",
+                    sets: 3,
+                    reps: 15,
+                    weight: 0,
+                    duration: 10,
+                    kcalBurned: 100,
+                }
+            ],
+        },
+        {
+            title: "run",
+            type: "Cardio",
+            exercises: [
+                {
+                    name: "jog",
+                    sets: 0,
+                    reps: 0,
+                    weight: 0,
+                    duration: 15,
+                    kcalBurned: 100,
+                }
+            ],
+        },
+        {
+            title: "Chest Workout",
+            type: "strength",
+            exercises: [
+                {
+                    name: "bench press",
+                    sets: 3,
+                    reps: 15,
+                    weight: 20,
+                    duration: 10,
+                    kcalBurned: 50,
+                }
+            ],
+        }
+    ],
+    sucess: true,
+    count: 3
 }
