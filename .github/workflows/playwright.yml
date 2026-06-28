@@ -10,6 +10,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
+      TEST_VALID_USERNAME : ${{ secrets.TEST_VALID_USERNAME }}
+      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+      TEST_USER_PASSWORD : ${{ secrets.TEST_USER_PASSWORD }}
+      TEST_INVALID_USER_PASSWORD : ${{ secrets.TEST_INVALID_USER_PASSWORD }}
+      TEST_INVALID_USER_EMAIL : ${{ secrets.TEST_INVALID_USER_EMAIL }}
 
     defaults:
       run:

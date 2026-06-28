@@ -36,7 +36,7 @@ export default defineConfig({
      video: 'retain-on-failure',
      screenshot: 'only-on-failure',
      
-    headless:false,
+    headless:true,
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: process.env.BASE_URL,
 
