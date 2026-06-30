@@ -47,9 +47,19 @@ test.describe('workout crud tests',()=>
         const workout = new Workouts(page);
 
         await workout.createWorkout(validWorkout.workoutTitle,validWorkout.workoutType,validChestWorkoutExercises);
-        await workout.LogWorkoutButton.click();
-        await workout.workoutOkModalButton.click();
         await workout.deleteWorkout(validWorkout.workoutTitle);
 
     })
+
+    //     test('To verify if user can delete all workouts successfully',async({page})=>
+    // {
+
+    //     const workout = new Workouts(page);
+    //     for(let i=0;i<53;i++)
+    //     {
+
+    //     await workout.deleteWorkout("jump");
+    //     }
+
+    // })
 })
