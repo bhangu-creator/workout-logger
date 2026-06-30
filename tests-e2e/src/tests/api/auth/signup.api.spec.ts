@@ -1,6 +1,7 @@
 import {test,expect} from '@playwright/test';
 import { AuthService } from '../../../api/services/auth.service';
-import { validUser,expectedResponseSignup,duplicateUser,duplicateEmailSignupResponse,passwordMissingUser ,missingPasswordSignupResponse,invalidEmailSignupResponse,invalidEmailUser} from '../../../api/test-data/auth.data';
+import { validUser,expectedResponseSignup,duplicateUser,duplicateEmailSignupResponse ,missingPasswordSignupResponse,invalidEmailSignupResponse,invalidEmailUser} from '../../../api/test-data/auth.data';
+import { createPasswordMissingUser } from '../../../utils/date.util';
 
 test.describe('Signup API Test Cases',()=>
 {
@@ -49,7 +50,7 @@ test.describe('Signup API Test Cases',()=>
     {
 
         const auth= new AuthService(request);
-        const response = await auth.signup(passwordMissingUser)
+        const response = await auth.signup(createPasswordMissingUser());
         
         //valiating the returned response
         expect(response.status()).toBe(400);

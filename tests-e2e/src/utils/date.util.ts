@@ -1,3 +1,5 @@
+import { SignupData } from "../api/test-data/auth.data"; 
+
 export function getYesterdayAndToday() {
   const today = new Date();
 
@@ -9,3 +11,9 @@ export function getYesterdayAndToday() {
     to: today.toISOString().split('T')[0],
   };
 }
+
+export const createPasswordMissingUser = (): SignupData => ({
+    name: "toast",
+    email: `testuser_${Date.now()}@mail.com`,
+    password: ""
+});
