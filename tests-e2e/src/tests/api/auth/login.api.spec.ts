@@ -10,13 +10,13 @@ test.describe('Login API Test Cases',()=>
         const auth= new AuthService(request);
         const response = await auth.login(validLoginUser);
 
-        await expect(response.status()).toBe(200);
+        expect(response.status()).toBe(200);
 
         const body= await response.json();
 
         validLoginResponse.token=body.token;
 
-        await expect(body).toEqual(validLoginResponse);
+        expect(body).toEqual(validLoginResponse);
 
 
     })
@@ -26,11 +26,11 @@ test.describe('Login API Test Cases',()=>
         const auth= new AuthService(request);
         const response = await auth.login(invalidPasswordLoginUser);
 
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         const body= await response.json();
 
-        await expect(body).toEqual(invalidPasswordLogin);
+        expect(body).toEqual(invalidPasswordLogin);
 
 
     })
@@ -40,11 +40,11 @@ test.describe('Login API Test Cases',()=>
         const auth= new AuthService(request);
         const response = await auth.login(invalidEmailLoginUser);
 
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         const body= await response.json();
 
-        await expect(body).toEqual(invalidPasswordLogin);
+        expect(body).toEqual(invalidPasswordLogin);
 
     })
 
@@ -53,11 +53,11 @@ test.describe('Login API Test Cases',()=>
         const auth= new AuthService(request);
         const response = await auth.login(emptyLoginUser);
 
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         const body= await response.json();
 
-        await expect(body).toEqual(emptyLoginUserResponse);
+        expect(body).toEqual(emptyLoginUserResponse);
 
     })
 
@@ -66,11 +66,11 @@ test.describe('Login API Test Cases',()=>
         const auth= new AuthService(request);
         const response = await auth.login(emptyLoginUser);
 
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         const body= await response.json();
 
-        await expect(body).toEqual(emptyLoginUserResponse);
+        expect(body).toEqual(emptyLoginUserResponse);
 
     })
 

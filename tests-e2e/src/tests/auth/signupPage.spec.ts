@@ -15,7 +15,7 @@ test.beforeEach('Go to Base Url before each Test',async({page})=>
 //creating suite for the Signup Page UI test cases
 test.describe('Signup Page UI Test Cases',()=>
 {
-    test('To verify if all -+ page UI elements are displayed correctly',async({page})=>
+    test('To verify if all page UI elements are displayed correctly',async({page})=>
     {
         //creating the signup page object
         const signupPage=new SignupPage(page);

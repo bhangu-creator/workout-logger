@@ -13,7 +13,7 @@ test.describe('Signup API Test Cases',()=>
 
         
         //validating the returned response
-        await expect(response.status()).toBe(201);
+        expect(response.status()).toBe(201);
 
         //returned body
         const body= await response.json();
@@ -26,7 +26,7 @@ test.describe('Signup API Test Cases',()=>
         finalExpected.user.id=body.user.id;
 
         //final assertion
-        await expect(body).toEqual(finalExpected);
+        expect(body).toEqual(finalExpected);
     })
 
     test('To verify duplicate email id cannot get registered',async({request})=>
@@ -36,13 +36,13 @@ test.describe('Signup API Test Cases',()=>
         const response = await auth.signup(duplicateUser)
         
         //valiating the returned response
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         //returned body
         const body= await response.json();
 
         //final assertion
-        await expect(body).toEqual(duplicateEmailSignupResponse);
+        expect(body).toEqual(duplicateEmailSignupResponse);
     })
 
     test('To verify user cannot signup when passsword is missing',async({request})=>
@@ -52,13 +52,13 @@ test.describe('Signup API Test Cases',()=>
         const response = await auth.signup(passwordMissingUser)
         
         //valiating the returned response
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         //returned body
         const body= await response.json();
         
         //final assertion
-        await expect(body).toEqual(missingPasswordSignupResponse);
+        expect(body).toEqual(missingPasswordSignupResponse);
     })
 
     test('To verify user cannot signup with invalid email format',async({request})=>
@@ -68,13 +68,13 @@ test.describe('Signup API Test Cases',()=>
         const response = await auth.signup(invalidEmailUser)
         
         //valiating the returned response
-        await expect(response.status()).toBe(400);
+        expect(response.status()).toBe(400);
 
         //returned body
         const body= await response.json();
         
         //final assertion
-        await expect(body).toEqual(invalidEmailSignupResponse);
+        expect(body).toEqual(invalidEmailSignupResponse);
     })
 
 })
